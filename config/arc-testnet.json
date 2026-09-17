@@ -1,0 +1,18 @@
+{
+  "network": "arc-testnet",
+  "chainId": 5042002,
+  "manifestUrl": "https://d20dao.org/deployments/arc-testnet.json",
+  "coordinator": "0xd20DA0FF9087d053f0291524Eac12abA1ADBd945",
+  "rpcUrls": [
+    "https://rpc.testnet.arc.io",
+    "https://rpc.blockdaemon.testnet.arc.io",
+    "https://rpc.drpc.testnet.arc.io"
+  ],
+  "explorer": "https://testnet.arcscan.app",
+  "callbackGasLimit": 100000,
+  "feeBufferBps": 3000,
+  "maxFeePerGasGwei": 200,
+  "pollIntervalMs": 500,
+  "settleTimeoutSeconds": 150,
+  "maxSpendUsdcPerRun": 25
+}

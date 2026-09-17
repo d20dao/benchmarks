@@ -1,0 +1,33 @@
+{
+  "sequential-20": {
+    "mode": "sequential",
+    "requests": 20,
+    "perTx": 1,
+    "description": "Baseline: 20 requests, one per transaction; the next request is sent only after the previous one is fulfilled or expired."
+  },
+  "burst-50": {
+    "mode": "burst",
+    "requests": 50,
+    "perTx": 50,
+    "description": "50 requests opened by one transaction, so all share one block."
+  },
+  "burst-200": {
+    "mode": "burst",
+    "requests": 200,
+    "perTx": 50,
+    "description": "200 requests opened by four 50-request transactions broadcast together; about 11M gas each, so they need at least two 30M-gas blocks."
+  },
+  "sustained-5rps-45s": {
+    "mode": "sustained",
+    "ratePerSecond": 5,
+    "durationSeconds": 45,
+    "perTx": 5,
+    "description": "Sustained arrivals: one 5-request transaction every second for 45 seconds (225 requests). 45 s instead of 60 s keeps the whole suite near 500 requests."
+  },
+  "smoke": {
+    "mode": "burst",
+    "requests": 3,
+    "perTx": 3,
+    "description": "Pipeline check before a real run; results go to results/smoke/ and are not published."
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "name": "@d20dao/benchmarks",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Reproducible load benchmarks for the D20DAO VRF randomness service on Arc Testnet",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "compile": "node scripts/compile.mjs",
+    "deploy": "node scripts/deploy.mjs",
+    "bench": "node scripts/bench.mjs",
+    "summary": "node scripts/summary.mjs"
+  },
+  "dependencies": {
+    "@d20dao/vrf-sdk": "0.3.3",
+    "ethers": "6.17.0",
+    "solc": "0.8.28"
+  }
+}

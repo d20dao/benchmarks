@@ -1,0 +1,28 @@
+{
+  "source": "Operator declaration for the D20DAO Arc Testnet keeper during these runs. Not measured by this repository and not verifiable from chain data; the keeper repository is private.",
+  "keeperAddressFromManifest": "see manifest.keeper in each result",
+  "host": {
+    "provider": "Hetzner vServer",
+    "cpu": "AMD EPYC-Rome",
+    "vCpu": 4,
+    "memoryGiB": 7.6,
+    "diskGB": 75,
+    "os": "Ubuntu 24.04.4 LTS",
+    "runtime": "Docker 29.8.1"
+  },
+  "keeperBuildCommit": "d15b4a0",
+  "settings": {
+    "POLL_MS": 250,
+    "TICK_TIMEOUT_SECONDS": 20,
+    "FULFILL_BATCH_MAX": 16,
+    "MAX_GAS": 6000000,
+    "MAX_FEE_PER_GAS_WEI": "100 gwei",
+    "FEE_COVERAGE_BPS": 10000,
+    "rpcEndpoints": [
+      "https://rpc.testnet.arc.io",
+      "https://rpc.blockdaemon.testnet.arc.io",
+      "https://rpc.drpc.testnet.arc.io"
+    ],
+    "transactionLanes": "one nonce lane: one fulfillment transaction at a time"
+  }
+}
