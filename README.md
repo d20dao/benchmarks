@@ -111,7 +111,7 @@ Reads, receipt polling and the fulfillment watcher use `https://rpc.blockdaemon.
 
 ## Keeper under test
 
-Operator-declared, not verifiable from this repository: Hetzner vServer, AMD EPYC-Rome, 4 vCPU, 7.6 GiB RAM, 75 GB disk, Ubuntu 24.04.4 LTS, Docker 29.8.1, keeper image built from commit `d15b4a0` of the private keeper repository. Settings: `POLL_MS=250`, `TICK_TIMEOUT_SECONDS=20`, `FULFILL_BATCH_MAX=16`, `MAX_GAS=6000000`, `MAX_FEE_PER_GAS_WEI` 100 gwei, `FEE_COVERAGE_BPS=10000`, the three public RPC endpoints in `config/arc-testnet.json`, and one nonce lane (one fulfillment transaction at a time). The fulfillment submitter address is recorded in every result and should match `keeper` in the manifest.
+Operator-declared, not verifiable from this repository: x86-64 virtual server (KVM), AMD EPYC-Rome, 4 vCPU, 7.6 GiB RAM, 75 GB disk, Ubuntu 24.04.4 LTS, Docker 29.8.1, keeper image built from commit `d15b4a0` of the private keeper repository. Settings: `POLL_MS=250`, `TICK_TIMEOUT_SECONDS=20`, `FULFILL_BATCH_MAX=16`, `MAX_GAS=6000000`, `MAX_FEE_PER_GAS_WEI` 100 gwei, `FEE_COVERAGE_BPS=10000`, the three public RPC endpoints in `config/arc-testnet.json`, and one nonce lane (one fulfillment transaction at a time). The fulfillment submitter address is recorded in every result and should match `keeper` in the manifest.
 
 ## Limitations
 

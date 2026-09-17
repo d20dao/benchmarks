@@ -2,7 +2,7 @@
   "source": "Operator declaration for the D20DAO Arc Testnet keeper during these runs. Not measured by this repository and not verifiable from chain data; the keeper repository is private.",
   "keeperAddressFromManifest": "see manifest.keeper in each result",
   "host": {
-    "provider": "Hetzner vServer",
+    "provider": "x86-64 virtual server (KVM)",
     "cpu": "AMD EPYC-Rome",
     "vCpu": 4,
     "memoryGiB": 7.6,
