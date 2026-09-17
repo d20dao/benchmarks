@@ -1,0 +1,2028 @@
+{
+  "schema": "d20dao-benchmark-result/1",
+  "runId": "burst-50-20260917T021705Z",
+  "scenario": {
+    "name": "burst-50",
+    "mode": "burst",
+    "requests": 50,
+    "perTx": 50,
+    "description": "50 requests opened by one transaction, so all share one block."
+  },
+  "startedAt": "2026-09-17T02:17:05.872Z",
+  "finishedAt": "2026-09-17T02:17:23.928Z",
+  "summary": {
+    "requests": {
+      "planned": 50,
+      "opened": 50,
+      "requestTransactions": 1,
+      "requestTransactionsReverted": 0,
+      "requestTransactionsNotIncluded": 0,
+      "requestsPerTransaction": 50,
+      "requestBlocks": 1,
+      "maxRequestsInOneBlock": 50,
+      "requestSpanBlocks": 1,
+      "requestSpanSeconds": 0,
+      "skippedTicks": 0
+    },
+    "outcome": {
+      "fulfilled": 50,
+      "fulfilledWithinDeadline": 50,
+      "successRate": 1,
+      "callbacksDelivered": 50,
+      "consumerDeliveredCounterDelta": 50,
+      "callbackFailures": 0,
+      "refunded": 0,
+      "expiredUnfulfilled": 0,
+      "skippedMemberEvents": 0,
+      "aborted": null
+    },
+    "latencySeconds": {
+      "count": 50,
+      "min": 5,
+      "p50": 10,
+      "p95": 12,
+      "p99": 12,
+      "max": 12,
+      "mean": 8.96,
+      "basis": "fulfillment block timestamp minus request block timestamp (1 s resolution)"
+    },
+    "latencyBlocks": {
+      "count": 50,
+      "min": 9,
+      "p50": 18,
+      "p95": 23,
+      "p99": 23,
+      "max": 23,
+      "mean": 16.28,
+      "basis": "fulfillment block number minus request block number"
+    },
+    "wallClockSeconds": {
+      "broadcastToReceiptObserved": {
+        "count": 50,
+        "min": 1.107,
+        "p50": 1.107,
+        "p95": 1.107,
+        "p99": 1.107,
+        "max": 1.107,
+        "mean": 1.107
+      },
+      "broadcastToFulfillmentObserved": {
+        "count": 50,
+        "min": 5.571,
+        "p50": 10.644,
+        "p95": 12.678,
+        "p99": 12.678,
+        "max": 12.678,
+        "mean": 9.429
+      },
+      "basis": "this process: broadcast start to first observation through rpc.blockdaemon.testnet.arc.io, polling every 500 ms",
+      "missingObservations": 0
+    },
+    "batching": {
+      "fulfillmentTransactions": 4,
+      "batchTransactions": 4,
+      "singleTransactions": 0,
+      "membersPerTransaction": [
+        8,
+        16,
+        16,
+        10
+      ],
+      "meanMembersPerTransaction": 12.5,
+      "maxMembersPerTransaction": 16,
+      "otherConsumersServedInTheseTransactions": 0,
+      "otherFulfillmentTransactionsInWindow": 0,
+      "secondsBetweenFulfillmentTransactions": {
+        "count": 3,
+        "min": 2,
+        "p50": 2,
+        "p95": 3,
+        "p99": 3,
+        "max": 3,
+        "mean": 2.333
+      },
+      "submitters": [
+        "0x61659d9A9A85dA07C36e7d1B35CF0d96CF199Cac"
+      ]
+    },
+    "throughput": {
+      "fulfillments": 50,
+      "firstFulfillmentTimestamp": 1789611434,
+      "lastFulfillmentTimestamp": 1789611441,
+      "activeWindowSeconds": 7,
+      "fulfillmentsPerSecond": 7.14,
+      "basis": "this run's fulfilled requests divided by the seconds between the first and last fulfillment block timestamps",
+      "limitedBy": "keeper and chain (all requests were open at once)"
+    },
+    "duration": {
+      "wallClockSeconds": 15.7,
+      "chainSeconds": 12,
+      "chainBasis": "first request block timestamp to last fulfillment block timestamp"
+    },
+    "gas": {
+      "callbackGasLimit": 100000,
+      "requestGasPerRequest": {
+        "count": 1,
+        "min": 195809,
+        "p50": 195809,
+        "p95": 195809,
+        "p99": 195809,
+        "max": 195809,
+        "mean": 195809
+      },
+      "requestEffectiveGasPriceGwei": {
+        "count": 1,
+        "min": 25,
+        "p50": 25,
+        "p95": 25,
+        "p99": 25,
+        "max": 25,
+        "mean": 25
+      },
+      "fulfillmentGasUsedPerTransaction": {
+        "count": 4,
+        "min": 2120895,
+        "p50": 2658283,
+        "p95": 4166740,
+        "p99": 4166740,
+        "max": 4166740,
+        "mean": 3276760
+      },
+      "fulfillmentGasPerServedMember": {
+        "count": 4,
+        "min": 260070,
+        "p50": 260421,
+        "p95": 265828,
+        "p99": 265828,
+        "max": 265828,
+        "mean": 262858,
+        "pooled": 262141
+      },
+      "fulfillmentEffectiveGasPriceGwei": {
+        "count": 4,
+        "min": 27.5,
+        "p50": 30,
+        "p95": 30,
+        "p99": 30,
+        "max": 30,
+        "mean": 29.375
+      }
+    },
+    "costUsdc": {
+      "user": {
+        "feePerRequest": 0.08,
+        "requestGasPerRequest": 0.004895,
+        "totalPerRequest": 0.084895,
+        "note": "requests opened through LoadConsumer; one request per transaction (sequential) is the closest to a single application request"
+      },
+      "keeper": {
+        "fulfillmentGasPerServedRequest": 0.007758,
+        "feeSharePerRequest": 0.04,
+        "netPerRequest": 0.032242
+      },
+      "run": {
+        "feesPaid": 4,
+        "requestGas": 0.244761,
+        "walletBalanceBefore": 55.975853625,
+        "walletBalanceAfter": 51.731092725,
+        "walletSpent": 4.244761
+      }
+    },
+    "epochs": {
+      "epochIds": [
+        258
+      ],
+      "requestsWaitingForEpochPublication": 50,
+      "basis": "targetBlock = max(requestBlock, epoch commit block + 1); a later target means the request waited for its epoch packet to be published"
+    },
+    "blocks": {
+      "fromBlock": 62501300,
+      "toBlock": 62501326,
+      "window": "from the chain head when the run started to the last block containing a request or a fulfillment of this run",
+      "blockCount": 27,
+      "spanSeconds": 13,
+      "meanBlockIntervalSeconds": 0.5,
+      "timestampResolutionSeconds": 1,
+      "medianBlocksPerTimestampSecond": 2,
+      "medianBlockIntervalSecondsEstimate": 0.5,
+      "baseFeeGwei": {
+        "min": 20,
+        "median": 20,
+        "max": 20
+      },
+      "gasUsedRatio": {
+        "mean": 0.0812,
+        "median": 0.051,
+        "max": 0.3426
+      },
+      "blockGasLimit": "30000000",
+      "transactions": {
+        "total": 305,
+        "meanPerBlock": 11.3
+      }
+    }
+  },
+  "environment": {
+    "network": "arc-testnet",
+    "chainId": 5042002,
+    "rpcForReads": "https://rpc.blockdaemon.testnet.arc.io",
+    "localClockMinusChainSecondsAtStart": -1.5,
+    "broadcastEndpoints": [
+      "https://rpc.blockdaemon.testnet.arc.io",
+      "https://rpc.testnet.arc.io",
+      "https://rpc.drpc.testnet.arc.io"
+    ],
+    "coordinatorProxy": "0xd20DA0FF9087d053f0291524Eac12abA1ADBd945",
+    "coordinatorImplementation": {
+      "atStart": "0xd20da0c375cefcda65703699a4090237057e9b68",
+      "atEnd": "0xd20da0c375cefcda65703699a4090237057e9b68",
+      "readFrom": "ERC-1967 implementation slot",
+      "matchesManifest": true
+    },
+    "manifest": {
+      "url": "https://d20dao.org/deployments/arc-testnet.json",
+      "sha256": "eb83eab2b37a05eb91031cbfee2a3f3988840c910d966512934ba1e8c37fb35e",
+      "contractSourceCommit": "640b60cb992a7e3add1efe8e7b392341732ea004",
+      "keeper": "0x61659d9A9A85dA07C36e7d1B35CF0d96CF199Cac",
+      "registry": "0xD20Da00B47A7cD2211dC4683E306913b05903756"
+    },
+    "pricing": {
+      "minFeeWei": "80000000000000000",
+      "feeMultiplier": 5,
+      "fulfillGasOverhead": 300000,
+      "keeperFeeBps": 5000
+    },
+    "keeper": {
+      "source": "Operator declaration for the D20DAO Arc Testnet keeper during these runs. Not measured by this repository and not verifiable from chain data; the keeper repository is private.",
+      "keeperAddressFromManifest": "see manifest.keeper in each result",
+      "host": {
+        "provider": "Hetzner vServer",
+        "cpu": "AMD EPYC-Rome",
+        "vCpu": 4,
+        "memoryGiB": 7.6,
+        "diskGB": 75,
+        "os": "Ubuntu 24.04.4 LTS",
+        "runtime": "Docker 29.8.1"
+      },
+      "keeperBuildCommit": "d15b4a0",
+      "settings": {
+        "POLL_MS": 250,
+        "TICK_TIMEOUT_SECONDS": 20,
+        "FULFILL_BATCH_MAX": 16,
+        "MAX_GAS": 6000000,
+        "MAX_FEE_PER_GAS_WEI": "100 gwei",
+        "FEE_COVERAGE_BPS": 10000,
+        "rpcEndpoints": [
+          "https://rpc.testnet.arc.io",
+          "https://rpc.blockdaemon.testnet.arc.io",
+          "https://rpc.drpc.testnet.arc.io"
+        ],
+        "transactionLanes": "one nonce lane: one fulfillment transaction at a time"
+      }
+    },
+    "consumer": {
+      "address": "0x7cFf09B81D013f1cbBd216607879BF529760b1B3",
+      "deploymentTx": "0x87fe0b04d11d71e7d797baf72e8dd1c7d3afac220ebd7b1ae1007a442faaf613",
+      "runtimeCodeKeccak256": "0x10442b71508615f2483604032b10285ddd5605655461bd2583502d02e0698212",
+      "compiler": "0.8.28+commit.7893614a.Emscripten.clang"
+    },
+    "sender": "0xC8DB0C09bFB51a1FC5D1D13032a2a9838d842356",
+    "runTag": "0xbb89c2416da7bd396eea9bf019dad8e9d3c492779f6586a1d89d5e784396470a",
+    "software": {
+      "sdk": "@d20dao/vrf-sdk@0.3.3",
+      "ethers": "6.17.0",
+      "solc": "0.8.28",
+      "node": "v24.19.0",
+      "os": "Windows_NT 10.0.19045 x64"
+    },
+    "script": {
+      "repository": "https://github.com/d20dao/benchmarks",
+      "commit": "4dd5f79693ad5b9faee9912b21c97ed5feeb7165",
+      "dirty": false,
+      "dirtyFiles": []
+    },
+    "watcher": {
+      "rpc": "https://rpc.blockdaemon.testnet.arc.io",
+      "pollIntervalMs": 500,
+      "polls": 31,
+      "failedPolls": 0,
+      "errors": [],
+      "maxMsBetweenSuccessfulPolls": 523,
+      "pollsSlowerThan2s": 0
+    }
+  },
+  "requestTransactions": [
+    {
+      "index": 0,
+      "hash": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "nonce": 43,
+      "count": 50,
+      "valuePerRequestWei": "80000000000000000",
+      "broadcastAtMs": 1789611426935,
+      "acceptedAtMs": 1789611427007,
+      "acceptedBy": "https://rpc.blockdaemon.testnet.arc.io",
+      "broadcastAttempts": 1,
+      "broadcastErrors": [],
+      "receiptObservedAtMs": 1789611428042,
+      "status": 1,
+      "block": 62501303,
+      "gasUsed": "9790436",
+      "effectiveGasPriceWei": "25000000000",
+      "opened": 50,
+      "blockTimestamp": 1789611429
+    }
+  ],
+  "fulfillmentTransactions": [
+    {
+      "hash": "0xb72e7d2f3517f807b861248dadac973860ef78578834e44f20824781d8f9d4ab",
+      "block": 62501312,
+      "timestamp": 1789611434,
+      "kind": "fulfillRandomnessBatch",
+      "from": "0x61659d9A9A85dA07C36e7d1B35CF0d96CF199Cac",
+      "nonce": 212,
+      "members": 8,
+      "served": 8,
+      "ourServed": 8,
+      "otherServed": 0,
+      "skipped": [],
+      "callbacksFailed": 0,
+      "gasUsed": 2120895,
+      "gasPerServedMember": 265112,
+      "effectiveGasPriceWei": "27500000000",
+      "costWei": "58324612500000000",
+      "keeperFeeWei": "320000000000000000",
+      "blockGasUsedRatio": 0.1372
+    },
+    {
+      "hash": "0x9c7e01235bdd1f59e0ee858a3424bf3fc2cadc0ab6dbf0961d66a13e9b5024bc",
+      "block": 62501317,
+      "timestamp": 1789611437,
+      "kind": "fulfillRandomnessBatch",
+      "from": "0x61659d9A9A85dA07C36e7d1B35CF0d96CF199Cac",
+      "nonce": 213,
+      "members": 16,
+      "served": 16,
+      "ourServed": 16,
+      "otherServed": 0,
+      "skipped": [],
+      "callbacksFailed": 0,
+      "gasUsed": 4166740,
+      "gasPerServedMember": 260421,
+      "effectiveGasPriceWei": "30000000000",
+      "costWei": "125002200000000000",
+      "keeperFeeWei": "640000000000000000",
+      "blockGasUsedRatio": 0.2433
+    },
+    {
+      "hash": "0xf2c30db1b388bf6dfd864b843b94462682af92365ad6d5f016a8f1d8bfdc3732",
+      "block": 62501321,
+      "timestamp": 1789611439,
+      "kind": "fulfillRandomnessBatch",
+      "from": "0x61659d9A9A85dA07C36e7d1B35CF0d96CF199Cac",
+      "nonce": 214,
+      "members": 16,
+      "served": 16,
+      "ourServed": 16,
+      "otherServed": 0,
+      "skipped": [],
+      "callbacksFailed": 0,
+      "gasUsed": 4161122,
+      "gasPerServedMember": 260070,
+      "effectiveGasPriceWei": "30000000000",
+      "costWei": "124833660000000000",
+      "keeperFeeWei": "640000000000000000",
+      "blockGasUsedRatio": 0.1993
+    },
+    {
+      "hash": "0x819decefef2df05e027b5c9f8c54194ab4e4d7bef3b76ca770d3b0a9d94b071d",
+      "block": 62501326,
+      "timestamp": 1789611441,
+      "kind": "fulfillRandomnessBatch",
+      "from": "0x61659d9A9A85dA07C36e7d1B35CF0d96CF199Cac",
+      "nonce": 215,
+      "members": 10,
+      "served": 10,
+      "ourServed": 10,
+      "otherServed": 0,
+      "skipped": [],
+      "callbacksFailed": 0,
+      "gasUsed": 2658283,
+      "gasPerServedMember": 265828,
+      "effectiveGasPriceWei": "30000000000",
+      "costWei": "79748490000000000",
+      "keeperFeeWei": "400000000000000000",
+      "blockGasUsedRatio": 0.1633
+    }
+  ],
+  "epochsCommittedNearRun": [
+    {
+      "epochId": 258,
+      "commitTx": "0x835664ab11bffa6f42f8eed760613bf189929ca2417fa8623f8adc2bb7298c9f",
+      "commitBlock": 62501307,
+      "commitTimestamp": 1789611432
+    }
+  ],
+  "requests": [
+    {
+      "requestId": "518",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0xf2c30db1b388bf6dfd864b843b94462682af92365ad6d5f016a8f1d8bfdc3732",
+      "fulfillmentBlock": 62501321,
+      "fulfillmentTimestamp": 1789611439,
+      "batchMembers": 16,
+      "latencySeconds": 10,
+      "latencyBlocks": 18,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501321,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 10644
+      }
+    },
+    {
+      "requestId": "519",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0xf2c30db1b388bf6dfd864b843b94462682af92365ad6d5f016a8f1d8bfdc3732",
+      "fulfillmentBlock": 62501321,
+      "fulfillmentTimestamp": 1789611439,
+      "batchMembers": 16,
+      "latencySeconds": 10,
+      "latencyBlocks": 18,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501321,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 10644
+      }
+    },
+    {
+      "requestId": "520",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0xf2c30db1b388bf6dfd864b843b94462682af92365ad6d5f016a8f1d8bfdc3732",
+      "fulfillmentBlock": 62501321,
+      "fulfillmentTimestamp": 1789611439,
+      "batchMembers": 16,
+      "latencySeconds": 10,
+      "latencyBlocks": 18,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501321,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 10644
+      }
+    },
+    {
+      "requestId": "521",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0xf2c30db1b388bf6dfd864b843b94462682af92365ad6d5f016a8f1d8bfdc3732",
+      "fulfillmentBlock": 62501321,
+      "fulfillmentTimestamp": 1789611439,
+      "batchMembers": 16,
+      "latencySeconds": 10,
+      "latencyBlocks": 18,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501321,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 10644
+      }
+    },
+    {
+      "requestId": "522",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0xf2c30db1b388bf6dfd864b843b94462682af92365ad6d5f016a8f1d8bfdc3732",
+      "fulfillmentBlock": 62501321,
+      "fulfillmentTimestamp": 1789611439,
+      "batchMembers": 16,
+      "latencySeconds": 10,
+      "latencyBlocks": 18,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501321,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 10644
+      }
+    },
+    {
+      "requestId": "523",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0xf2c30db1b388bf6dfd864b843b94462682af92365ad6d5f016a8f1d8bfdc3732",
+      "fulfillmentBlock": 62501321,
+      "fulfillmentTimestamp": 1789611439,
+      "batchMembers": 16,
+      "latencySeconds": 10,
+      "latencyBlocks": 18,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501321,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 10644
+      }
+    },
+    {
+      "requestId": "524",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0xf2c30db1b388bf6dfd864b843b94462682af92365ad6d5f016a8f1d8bfdc3732",
+      "fulfillmentBlock": 62501321,
+      "fulfillmentTimestamp": 1789611439,
+      "batchMembers": 16,
+      "latencySeconds": 10,
+      "latencyBlocks": 18,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501321,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 10644
+      }
+    },
+    {
+      "requestId": "525",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0xf2c30db1b388bf6dfd864b843b94462682af92365ad6d5f016a8f1d8bfdc3732",
+      "fulfillmentBlock": 62501321,
+      "fulfillmentTimestamp": 1789611439,
+      "batchMembers": 16,
+      "latencySeconds": 10,
+      "latencyBlocks": 18,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501321,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 10644
+      }
+    },
+    {
+      "requestId": "526",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0xf2c30db1b388bf6dfd864b843b94462682af92365ad6d5f016a8f1d8bfdc3732",
+      "fulfillmentBlock": 62501321,
+      "fulfillmentTimestamp": 1789611439,
+      "batchMembers": 16,
+      "latencySeconds": 10,
+      "latencyBlocks": 18,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501321,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 10644
+      }
+    },
+    {
+      "requestId": "527",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0xf2c30db1b388bf6dfd864b843b94462682af92365ad6d5f016a8f1d8bfdc3732",
+      "fulfillmentBlock": 62501321,
+      "fulfillmentTimestamp": 1789611439,
+      "batchMembers": 16,
+      "latencySeconds": 10,
+      "latencyBlocks": 18,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501321,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 10644
+      }
+    },
+    {
+      "requestId": "528",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0xf2c30db1b388bf6dfd864b843b94462682af92365ad6d5f016a8f1d8bfdc3732",
+      "fulfillmentBlock": 62501321,
+      "fulfillmentTimestamp": 1789611439,
+      "batchMembers": 16,
+      "latencySeconds": 10,
+      "latencyBlocks": 18,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501321,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 10644
+      }
+    },
+    {
+      "requestId": "529",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0xf2c30db1b388bf6dfd864b843b94462682af92365ad6d5f016a8f1d8bfdc3732",
+      "fulfillmentBlock": 62501321,
+      "fulfillmentTimestamp": 1789611439,
+      "batchMembers": 16,
+      "latencySeconds": 10,
+      "latencyBlocks": 18,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501321,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 10644
+      }
+    },
+    {
+      "requestId": "530",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0xf2c30db1b388bf6dfd864b843b94462682af92365ad6d5f016a8f1d8bfdc3732",
+      "fulfillmentBlock": 62501321,
+      "fulfillmentTimestamp": 1789611439,
+      "batchMembers": 16,
+      "latencySeconds": 10,
+      "latencyBlocks": 18,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501321,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 10644
+      }
+    },
+    {
+      "requestId": "531",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0xf2c30db1b388bf6dfd864b843b94462682af92365ad6d5f016a8f1d8bfdc3732",
+      "fulfillmentBlock": 62501321,
+      "fulfillmentTimestamp": 1789611439,
+      "batchMembers": 16,
+      "latencySeconds": 10,
+      "latencyBlocks": 18,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501321,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 10644
+      }
+    },
+    {
+      "requestId": "532",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0x819decefef2df05e027b5c9f8c54194ab4e4d7bef3b76ca770d3b0a9d94b071d",
+      "fulfillmentBlock": 62501326,
+      "fulfillmentTimestamp": 1789611441,
+      "batchMembers": 10,
+      "latencySeconds": 12,
+      "latencyBlocks": 23,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501326,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 12678
+      }
+    },
+    {
+      "requestId": "533",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0x819decefef2df05e027b5c9f8c54194ab4e4d7bef3b76ca770d3b0a9d94b071d",
+      "fulfillmentBlock": 62501326,
+      "fulfillmentTimestamp": 1789611441,
+      "batchMembers": 10,
+      "latencySeconds": 12,
+      "latencyBlocks": 23,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501326,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 12678
+      }
+    },
+    {
+      "requestId": "534",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0x819decefef2df05e027b5c9f8c54194ab4e4d7bef3b76ca770d3b0a9d94b071d",
+      "fulfillmentBlock": 62501326,
+      "fulfillmentTimestamp": 1789611441,
+      "batchMembers": 10,
+      "latencySeconds": 12,
+      "latencyBlocks": 23,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501326,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 12678
+      }
+    },
+    {
+      "requestId": "535",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0x819decefef2df05e027b5c9f8c54194ab4e4d7bef3b76ca770d3b0a9d94b071d",
+      "fulfillmentBlock": 62501326,
+      "fulfillmentTimestamp": 1789611441,
+      "batchMembers": 10,
+      "latencySeconds": 12,
+      "latencyBlocks": 23,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501326,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 12678
+      }
+    },
+    {
+      "requestId": "536",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0x819decefef2df05e027b5c9f8c54194ab4e4d7bef3b76ca770d3b0a9d94b071d",
+      "fulfillmentBlock": 62501326,
+      "fulfillmentTimestamp": 1789611441,
+      "batchMembers": 10,
+      "latencySeconds": 12,
+      "latencyBlocks": 23,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501326,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 12678
+      }
+    },
+    {
+      "requestId": "537",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0x819decefef2df05e027b5c9f8c54194ab4e4d7bef3b76ca770d3b0a9d94b071d",
+      "fulfillmentBlock": 62501326,
+      "fulfillmentTimestamp": 1789611441,
+      "batchMembers": 10,
+      "latencySeconds": 12,
+      "latencyBlocks": 23,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501326,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 12678
+      }
+    },
+    {
+      "requestId": "538",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0x819decefef2df05e027b5c9f8c54194ab4e4d7bef3b76ca770d3b0a9d94b071d",
+      "fulfillmentBlock": 62501326,
+      "fulfillmentTimestamp": 1789611441,
+      "batchMembers": 10,
+      "latencySeconds": 12,
+      "latencyBlocks": 23,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501326,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 12678
+      }
+    },
+    {
+      "requestId": "539",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0x819decefef2df05e027b5c9f8c54194ab4e4d7bef3b76ca770d3b0a9d94b071d",
+      "fulfillmentBlock": 62501326,
+      "fulfillmentTimestamp": 1789611441,
+      "batchMembers": 10,
+      "latencySeconds": 12,
+      "latencyBlocks": 23,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501326,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 12678
+      }
+    },
+    {
+      "requestId": "540",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0x819decefef2df05e027b5c9f8c54194ab4e4d7bef3b76ca770d3b0a9d94b071d",
+      "fulfillmentBlock": 62501326,
+      "fulfillmentTimestamp": 1789611441,
+      "batchMembers": 10,
+      "latencySeconds": 12,
+      "latencyBlocks": 23,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501326,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 12678
+      }
+    },
+    {
+      "requestId": "541",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0x819decefef2df05e027b5c9f8c54194ab4e4d7bef3b76ca770d3b0a9d94b071d",
+      "fulfillmentBlock": 62501326,
+      "fulfillmentTimestamp": 1789611441,
+      "batchMembers": 10,
+      "latencySeconds": 12,
+      "latencyBlocks": 23,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501326,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 12678
+      }
+    },
+    {
+      "requestId": "542",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0xb72e7d2f3517f807b861248dadac973860ef78578834e44f20824781d8f9d4ab",
+      "fulfillmentBlock": 62501312,
+      "fulfillmentTimestamp": 1789611434,
+      "batchMembers": 8,
+      "latencySeconds": 5,
+      "latencyBlocks": 9,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501312,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 5571
+      }
+    },
+    {
+      "requestId": "543",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0xb72e7d2f3517f807b861248dadac973860ef78578834e44f20824781d8f9d4ab",
+      "fulfillmentBlock": 62501312,
+      "fulfillmentTimestamp": 1789611434,
+      "batchMembers": 8,
+      "latencySeconds": 5,
+      "latencyBlocks": 9,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501312,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 5571
+      }
+    },
+    {
+      "requestId": "544",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0xb72e7d2f3517f807b861248dadac973860ef78578834e44f20824781d8f9d4ab",
+      "fulfillmentBlock": 62501312,
+      "fulfillmentTimestamp": 1789611434,
+      "batchMembers": 8,
+      "latencySeconds": 5,
+      "latencyBlocks": 9,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501312,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 5571
+      }
+    },
+    {
+      "requestId": "545",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0xb72e7d2f3517f807b861248dadac973860ef78578834e44f20824781d8f9d4ab",
+      "fulfillmentBlock": 62501312,
+      "fulfillmentTimestamp": 1789611434,
+      "batchMembers": 8,
+      "latencySeconds": 5,
+      "latencyBlocks": 9,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501312,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 5571
+      }
+    },
+    {
+      "requestId": "546",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0xb72e7d2f3517f807b861248dadac973860ef78578834e44f20824781d8f9d4ab",
+      "fulfillmentBlock": 62501312,
+      "fulfillmentTimestamp": 1789611434,
+      "batchMembers": 8,
+      "latencySeconds": 5,
+      "latencyBlocks": 9,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501312,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 5571
+      }
+    },
+    {
+      "requestId": "547",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0xb72e7d2f3517f807b861248dadac973860ef78578834e44f20824781d8f9d4ab",
+      "fulfillmentBlock": 62501312,
+      "fulfillmentTimestamp": 1789611434,
+      "batchMembers": 8,
+      "latencySeconds": 5,
+      "latencyBlocks": 9,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501312,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 5571
+      }
+    },
+    {
+      "requestId": "548",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0xb72e7d2f3517f807b861248dadac973860ef78578834e44f20824781d8f9d4ab",
+      "fulfillmentBlock": 62501312,
+      "fulfillmentTimestamp": 1789611434,
+      "batchMembers": 8,
+      "latencySeconds": 5,
+      "latencyBlocks": 9,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501312,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 5571
+      }
+    },
+    {
+      "requestId": "549",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0xb72e7d2f3517f807b861248dadac973860ef78578834e44f20824781d8f9d4ab",
+      "fulfillmentBlock": 62501312,
+      "fulfillmentTimestamp": 1789611434,
+      "batchMembers": 8,
+      "latencySeconds": 5,
+      "latencyBlocks": 9,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501312,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 5571
+      }
+    },
+    {
+      "requestId": "550",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0x9c7e01235bdd1f59e0ee858a3424bf3fc2cadc0ab6dbf0961d66a13e9b5024bc",
+      "fulfillmentBlock": 62501317,
+      "fulfillmentTimestamp": 1789611437,
+      "batchMembers": 16,
+      "latencySeconds": 8,
+      "latencyBlocks": 14,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501317,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 8111
+      }
+    },
+    {
+      "requestId": "551",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0x9c7e01235bdd1f59e0ee858a3424bf3fc2cadc0ab6dbf0961d66a13e9b5024bc",
+      "fulfillmentBlock": 62501317,
+      "fulfillmentTimestamp": 1789611437,
+      "batchMembers": 16,
+      "latencySeconds": 8,
+      "latencyBlocks": 14,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501317,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 8111
+      }
+    },
+    {
+      "requestId": "552",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0x9c7e01235bdd1f59e0ee858a3424bf3fc2cadc0ab6dbf0961d66a13e9b5024bc",
+      "fulfillmentBlock": 62501317,
+      "fulfillmentTimestamp": 1789611437,
+      "batchMembers": 16,
+      "latencySeconds": 8,
+      "latencyBlocks": 14,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501317,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 8111
+      }
+    },
+    {
+      "requestId": "553",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0x9c7e01235bdd1f59e0ee858a3424bf3fc2cadc0ab6dbf0961d66a13e9b5024bc",
+      "fulfillmentBlock": 62501317,
+      "fulfillmentTimestamp": 1789611437,
+      "batchMembers": 16,
+      "latencySeconds": 8,
+      "latencyBlocks": 14,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501317,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 8111
+      }
+    },
+    {
+      "requestId": "554",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0x9c7e01235bdd1f59e0ee858a3424bf3fc2cadc0ab6dbf0961d66a13e9b5024bc",
+      "fulfillmentBlock": 62501317,
+      "fulfillmentTimestamp": 1789611437,
+      "batchMembers": 16,
+      "latencySeconds": 8,
+      "latencyBlocks": 14,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501317,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 8111
+      }
+    },
+    {
+      "requestId": "555",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0x9c7e01235bdd1f59e0ee858a3424bf3fc2cadc0ab6dbf0961d66a13e9b5024bc",
+      "fulfillmentBlock": 62501317,
+      "fulfillmentTimestamp": 1789611437,
+      "batchMembers": 16,
+      "latencySeconds": 8,
+      "latencyBlocks": 14,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501317,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 8111
+      }
+    },
+    {
+      "requestId": "556",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0x9c7e01235bdd1f59e0ee858a3424bf3fc2cadc0ab6dbf0961d66a13e9b5024bc",
+      "fulfillmentBlock": 62501317,
+      "fulfillmentTimestamp": 1789611437,
+      "batchMembers": 16,
+      "latencySeconds": 8,
+      "latencyBlocks": 14,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501317,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 8111
+      }
+    },
+    {
+      "requestId": "557",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0x9c7e01235bdd1f59e0ee858a3424bf3fc2cadc0ab6dbf0961d66a13e9b5024bc",
+      "fulfillmentBlock": 62501317,
+      "fulfillmentTimestamp": 1789611437,
+      "batchMembers": 16,
+      "latencySeconds": 8,
+      "latencyBlocks": 14,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501317,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 8111
+      }
+    },
+    {
+      "requestId": "558",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0x9c7e01235bdd1f59e0ee858a3424bf3fc2cadc0ab6dbf0961d66a13e9b5024bc",
+      "fulfillmentBlock": 62501317,
+      "fulfillmentTimestamp": 1789611437,
+      "batchMembers": 16,
+      "latencySeconds": 8,
+      "latencyBlocks": 14,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501317,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 8111
+      }
+    },
+    {
+      "requestId": "559",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0x9c7e01235bdd1f59e0ee858a3424bf3fc2cadc0ab6dbf0961d66a13e9b5024bc",
+      "fulfillmentBlock": 62501317,
+      "fulfillmentTimestamp": 1789611437,
+      "batchMembers": 16,
+      "latencySeconds": 8,
+      "latencyBlocks": 14,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501317,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 8111
+      }
+    },
+    {
+      "requestId": "560",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0x9c7e01235bdd1f59e0ee858a3424bf3fc2cadc0ab6dbf0961d66a13e9b5024bc",
+      "fulfillmentBlock": 62501317,
+      "fulfillmentTimestamp": 1789611437,
+      "batchMembers": 16,
+      "latencySeconds": 8,
+      "latencyBlocks": 14,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501317,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 8111
+      }
+    },
+    {
+      "requestId": "561",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0x9c7e01235bdd1f59e0ee858a3424bf3fc2cadc0ab6dbf0961d66a13e9b5024bc",
+      "fulfillmentBlock": 62501317,
+      "fulfillmentTimestamp": 1789611437,
+      "batchMembers": 16,
+      "latencySeconds": 8,
+      "latencyBlocks": 14,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501317,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 8111
+      }
+    },
+    {
+      "requestId": "562",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0x9c7e01235bdd1f59e0ee858a3424bf3fc2cadc0ab6dbf0961d66a13e9b5024bc",
+      "fulfillmentBlock": 62501317,
+      "fulfillmentTimestamp": 1789611437,
+      "batchMembers": 16,
+      "latencySeconds": 8,
+      "latencyBlocks": 14,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501317,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 8111
+      }
+    },
+    {
+      "requestId": "563",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0x9c7e01235bdd1f59e0ee858a3424bf3fc2cadc0ab6dbf0961d66a13e9b5024bc",
+      "fulfillmentBlock": 62501317,
+      "fulfillmentTimestamp": 1789611437,
+      "batchMembers": 16,
+      "latencySeconds": 8,
+      "latencyBlocks": 14,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501317,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 8111
+      }
+    },
+    {
+      "requestId": "564",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0x9c7e01235bdd1f59e0ee858a3424bf3fc2cadc0ab6dbf0961d66a13e9b5024bc",
+      "fulfillmentBlock": 62501317,
+      "fulfillmentTimestamp": 1789611437,
+      "batchMembers": 16,
+      "latencySeconds": 8,
+      "latencyBlocks": 14,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501317,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 8111
+      }
+    },
+    {
+      "requestId": "565",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0x9c7e01235bdd1f59e0ee858a3424bf3fc2cadc0ab6dbf0961d66a13e9b5024bc",
+      "fulfillmentBlock": 62501317,
+      "fulfillmentTimestamp": 1789611437,
+      "batchMembers": 16,
+      "latencySeconds": 8,
+      "latencyBlocks": 14,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501317,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 8111
+      }
+    },
+    {
+      "requestId": "566",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0xf2c30db1b388bf6dfd864b843b94462682af92365ad6d5f016a8f1d8bfdc3732",
+      "fulfillmentBlock": 62501321,
+      "fulfillmentTimestamp": 1789611439,
+      "batchMembers": 16,
+      "latencySeconds": 10,
+      "latencyBlocks": 18,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501321,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 10644
+      }
+    },
+    {
+      "requestId": "567",
+      "requestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
+      "requestBlock": 62501303,
+      "requestTimestamp": 1789611429,
+      "deadline": 1789611489,
+      "epochId": 258,
+      "targetBlock": 62501308,
+      "feePaidWei": "80000000000000000",
+      "requestGasShare": 195809,
+      "fulfillmentTx": "0xf2c30db1b388bf6dfd864b843b94462682af92365ad6d5f016a8f1d8bfdc3732",
+      "fulfillmentBlock": 62501321,
+      "fulfillmentTimestamp": 1789611439,
+      "batchMembers": 16,
+      "latencySeconds": 10,
+      "latencyBlocks": 18,
+      "fulfilled": true,
+      "fulfilledWithinDeadline": true,
+      "delivered": true,
+      "consumerDeliveredBlock": 62501321,
+      "callbackAttempts": [
+        true
+      ],
+      "keeperFeeWei": "40000000000000000",
+      "refunded": false,
+      "expired": false,
+      "skippedReasons": [],
+      "wallClock": {
+        "broadcastToReceiptObservedMs": 1107,
+        "broadcastToFulfillmentObservedMs": 10644
+      }
+    }
+  ],
+  "skippedTicks": []
+}

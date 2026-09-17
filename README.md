@@ -125,7 +125,23 @@ Operator-declared, not verifiable from this repository: Hetzner vServer, AMD EPY
 
 ## Published runs
 
-Filled in from `results/summary.json` after the runs.
+Four scenarios on 2026-09-17 between 02:13 and 02:23 UTC, all from script commit `4dd5f79693ad5b9faee9912b21c97ed5feeb7165` with a clean working tree, against coordinator implementation `0xd20da0c375cefcda65703699a4090237057e9b68` (matched the manifest before and after every run). LoadConsumer: [`0x7cFf09B81D013f1cbBd216607879BF529760b1B3`](https://testnet.arcscan.app/address/0x7cFf09B81D013f1cbBd216607879BF529760b1B3). Every fulfillment came from the manifest keeper `0x61659d9A9A85dA07C36e7d1B35CF0d96CF199Cac`; no other application's request shared these fulfillment transactions. The Arc Testnet base fee stayed at 20 gwei and blocks arrived about every 0.5 s. The runner used Node 24.19.0, ethers 6.17.0 and `@d20dao/vrf-sdk` 0.3.3. Full numbers: `results/summary.json` and the linked files.
+
+| Scenario | Requests | Within 60 s | Completion p50 / p95 / p99 / max | Blocks p50 / p95 / max | Fulfillment txs (members) | Throughput | Chain duration | Gas per request: request / fulfillment |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| [`sequential-20`](results/sequential-20-20260917T021356Z.json) | 20 (1 per tx, 20 blocks) | 20/20 | 2 / 3 / 3 / 3 s | 4 / 6 / 6 | 20 (1 × 20) | arrival-limited (0.34/s) | 61 s | 296,868 / 296,981 |
+| [`burst-50`](results/burst-50-20260917T021705Z.json) | 50 (50 per tx, 1 block) | 50/50 | 10 / 12 / 12 / 12 s | 18 / 23 / 23 | 4 (8, 16, 16, 10) | 7.14/s over 7 s | 12 s | 195,809 / 262,141 |
+| [`burst-200`](results/burst-200-20260917T021924Z.json) | 200 (50 per tx, 2 blocks) | 200/200 | 21 / 33 / 35 / 35 s | 41 / 65 / 70 | 13 (16 × 12, 8) | 6.90/s over 29 s | 35 s | 195,404 / 260,834 |
+| [`sustained-5rps-40s`](results/sustained-5rps-40s-20260917T022208Z.json) | 200 (5 per tx, 40 blocks) | 200/200 | 5 / 7 / 8 / 8 s | 10 / 14 / 14 | 24 (8, 7, 5 × 4, 1, 9, 5 × 5, 10 × 3, 15, 15, 10, 15, 15, 10, 15, 5) | arrival-limited (4.88/s) | 45 s | 230,591 / 235,122 |
+
+Observations:
+
+- **Serving rate.** With every request already open, the keeper served 6.90 requests per second over 29 s in `burst-200`: one fulfillment transaction every 2.4 s on average, twelve with 16 members and a final one with 8. Counting only the members after the first transaction gives 6.34 per second. The batch cap of 16 (`FULFILL_BATCH_MAX`, the coordinator's `MAX_FULFILL_BATCH`) was reached before the keeper's 6M gas limit: a full batch used about 4,161,173 gas.
+- **Queueing.** Completion time in a burst grows with queue position: the last of 200 simultaneous requests completed 35 s after its request block, within the 60 s deadline. At 5 requests per second completion stayed at 8 s or less, although batches grew from 5 members to 10 and 15 in the second half of the 40 seconds.
+- **Isolated requests** completed in 1 to 3 chain seconds (2 to 6 blocks) when their epoch packet was already published. Requests that arrive in an idle epoch also wait for the packet's publication transaction; the first fulfillment of `burst-50` and `burst-200` came 5 to 6 s after the request block.
+- **Cost.** Every request paid the 0.08 USDC minimum fee. Request gas through LoadConsumer was 296,868 for a single request and about 195,404 per request in a 50-request transaction (0.0074 and 0.0049 USDC). The keeper's share was 0.04 USDC per request against 0.0063 to 0.0083 USDC of fulfillment gas per served request.
+
+`results/superseded/` holds an earlier `sequential-20` run from commit `6ae1bd7` whose wall-clock observations were distorted by RPC rate limiting (see [Observation endpoint](#observation-endpoint)); its chain data (20 of 20 fulfilled, 1 to 5 s) is consistent with the published run. Two 3-request pipeline checks (`smoke`) are not published.
 
 ## License
 
