@@ -17,7 +17,7 @@ See [Published runs](#published-runs) below and `results/summary.json`. Each sce
 | `contracts/LoadConsumer.sol` | MIT load consumer (Solidity 0.8.28, `evmVersion` cancun). Extends the SDK's `D20VRFConsumer`; `open(count, callbackGasLimit, runTag)` opens up to 100 paid raw requests in one transaction, pays the exact in-transaction `quoteFee` for each, returns unused value and records every authenticated callback in `deliveredBlock(requestId)`. The owner (benchmark wallet) is the refund address. |
 | `artifacts/LoadConsumer.json` | solc-js 0.8.28 output (optimizer 200 runs) with source SHA-256s and immutable references. |
 | `deployments/arc-testnet.json` | The deployed consumer, its deployment transaction and runtime code hash. |
-| `config/arc-testnet.json` | Chain ID, manifest URL, coordinator proxy, RPC endpoints, callback gas (100,000), fee buffer and safety caps. |
+| `config/arc-testnet.json` | Chain ID, manifest URL, coordinator proxy, read and broadcast RPC endpoints, callback gas (100,000), fee buffer and safety caps. |
 | `config/scenarios.json` | Scenario definitions. |
 | `config/keeper-arc-testnet.json` | Keeper hardware and settings **as declared by the operator** (not measurable from chain data). |
 | `scripts/compile.mjs` | Compiles the contract (`--check` verifies the committed artifact). |
@@ -33,7 +33,7 @@ See [Published runs](#published-runs) below and `results/summary.json`. Each sce
 | `sequential-20` | 20 requests, one per transaction; the next is sent after the previous one is fulfilled (or its deadline passes). | Baseline latency for an isolated request. |
 | `burst-50` | 50 requests in one transaction, so all 50 share one block. | Batching behaviour for a burst that needs several 16-member fulfillments. |
 | `burst-200` | 200 requests in four 50-request transactions broadcast together (about 11M gas each, so at least two 30M-gas blocks). | Queueing under a large simultaneous burst; the keeper's sustained serving rate when every request is already open. |
-| `sustained-5rps-45s` | One 5-request transaction every second for 45 seconds (225 requests). | Steady arrivals below the burst serving rate. 45 s instead of 60 s keeps the suite near 500 paid requests. |
+| `sustained-5rps-40s` | One 5-request transaction every second for 40 seconds (200 requests). | Steady arrivals below the burst serving rate. 40 s instead of 60 s keeps the suite, including one repeated baseline run, under 500 paid requests. |
 
 Why a contract: Arc Testnet keeps only about 16 pending transactions per sender, and the coordinator accepts requests only from contracts. Opening many requests per transaction is the only way for one wallet to create concurrent load.
 
@@ -48,7 +48,7 @@ Requirements: Node 22.13 or newer (the SDK's minimum), npm, and an Arc Testnet w
    npm run compile -- --check   # or npm run compile to rebuild the artifact
    ```
 
-2. **Fund a dedicated testnet wallet.** Use a fresh key that holds nothing else. At the initialized pricing (0.08 USDC minimum fee per request, 100,000 callback gas, base fee near 20 gwei) the full suite of 495 requests costs about 43 USDC: 39.6 USDC in request fees plus request gas. Put the key in a file outside the repository (`*.key` is git-ignored anyway):
+2. **Fund a dedicated testnet wallet.** Use a fresh key that holds nothing else. At the initialized pricing (0.08 USDC minimum fee per request, 100,000 callback gas, base fee near 20 gwei) the suite of 470 requests costs about 40 USDC: 37.6 USDC in request fees plus about 2 USDC of request gas. Put the key in a file outside the repository (`*.key` is git-ignored anyway):
 
    ```sh
    export BENCH_PRIVATE_KEY_FILE=/secure/path/arc-testnet-bench.key
@@ -85,7 +85,7 @@ All values derived from the chain come from receipts, coordinator and registry l
 
 **`summary.latencySeconds`** and **`summary.latencyBlocks`**: completion latency per request, as fulfillment block timestamp minus request block timestamp, and fulfillment block number minus request block number. Arc block timestamps have 1-second resolution, and Arc produced about two blocks per second during these runs, so block counts are the finer measure. Percentiles use the nearest-rank method (the smallest value with at least p% of observations at or below it); with 20 samples p95 is the 19th value and p99 equals the maximum.
 
-**`summary.wallClockSeconds`**: from the start of the broadcast to the moment this process first saw the receipt, and first saw the `RandomnessFulfilled` log, by polling `eth_getLogs` every 500 ms through the read RPC. It includes RPC propagation and polling delay. `environment.localClockMinusChainSecondsAtStart` shows the offset between the local clock and chain time.
+**`summary.wallClockSeconds`**: from the start of the broadcast to the moment this process first saw the receipt, and first saw the `RandomnessFulfilled` log, by polling `eth_blockNumber` and `eth_getLogs` every 500 ms through the read RPC. It includes RPC propagation and polling delay. `environment.watcher` records polls, failed polls and the longest gap between successful polls, so an observation stall is visible next to the numbers it affects. `environment.localClockMinusChainSecondsAtStart` shows the offset between the local clock and chain time.
 
 **`summary.batching`**: number of fulfillment transactions that served this run's requests, `membersPerTransaction` in block order (served plus skipped members, including other consumers' requests if the keeper mixed them in), `otherConsumersServedInTheseTransactions`, `secondsBetweenFulfillmentTransactions` and the submitting addresses.
 
@@ -105,6 +105,10 @@ All values derived from the chain come from receipts, coordinator and registry l
 
 The file also lists every request transaction (nonce, broadcast timing, endpoint, block, gas), every fulfillment transaction that served the run (members, gas, price, cost, keeper fees, block gas ratio), epoch publications near the run and a record per request (request and fulfillment transaction, blocks, timestamps, deadline, epoch, target block, latency, delivery, refunds and wall-clock observations).
 
+## Observation endpoint
+
+Reads, receipt polling and the fulfillment watcher use `https://rpc.blockdaemon.testnet.arc.io` (`readRpcUrl`); request transactions are broadcast there first and then to the other two public endpoints. During the first attempt of this suite, `https://rpc.testnet.arc.io` answered `HTTP 429 rate limit exceeded` at roughly five requests per second. ethers retries 429 responses internally without surfacing them, so the benchmark's own receipt and log polling stalled for up to about 50 seconds while chain data showed every request fulfilled within 5 seconds. That run is kept in `results/superseded/` and is not part of the summary. The watcher now uses plain JSON-RPC calls with a 3-second timeout and records its own stalls.
+
 ## Keeper under test
 
 Operator-declared, not verifiable from this repository: Hetzner vServer, AMD EPYC-Rome, 4 vCPU, 7.6 GiB RAM, 75 GB disk, Ubuntu 24.04.4 LTS, Docker 29.8.1, keeper image built from commit `d15b4a0` of the private keeper repository. Settings: `POLL_MS=250`, `TICK_TIMEOUT_SECONDS=20`, `FULFILL_BATCH_MAX=16`, `MAX_GAS=6000000`, `MAX_FEE_PER_GAS_WEI` 100 gwei, `FEE_COVERAGE_BPS=10000`, the three public RPC endpoints in `config/arc-testnet.json`, and one nonce lane (one fulfillment transaction at a time). The fulfillment submitter address is recorded in every result and should match `keeper` in the manifest.
@@ -116,7 +120,7 @@ Operator-declared, not verifiable from this repository: Hetzner vServer, AMD EPY
 - **Public RPC.** Both the benchmark and the keeper use public Arc endpoints with unknown load and rate limits. Wall-clock values also include the benchmark machine's network path.
 - **Chain time resolution.** Block timestamps are whole seconds; latencies in seconds carry up to one second of rounding in each direction.
 - **Consumer shape.** Requests are raw words with 100,000 callback gas and a small storage-writing callback. Mapped requests, other callback gas limits or heavier callbacks change gas and fees.
-- **Small samples.** Tail percentiles of 20 to 225 samples from single runs are indicative, not statistically stable. Run the suite again to compare.
+- **Small samples.** Tail percentiles of 20 to 200 samples from single runs are indicative, not statistically stable. Run the suite again to compare.
 - **Not an SLA.** The protocol guarantees only that a request not fulfilled within 60 seconds becomes refundable. These numbers are observations, not commitments.
 
 ## Published runs

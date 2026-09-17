@@ -28,7 +28,11 @@ const deployment = readJson("deployments/arc-testnet.json");
 const artifact = readJson("artifacts/LoadConsumer.json");
 const log = (phase, data = {}) => console.log(JSON.stringify({t: new Date().toISOString(), phase, ...data}));
 
-const RPC = config.rpcUrls[0];
+// All reads, receipt polling and the fulfillment watcher use one endpoint. rpc.testnet.arc.io answered HTTP 429 at a
+// few requests per second during development, and ethers retries 429 silently, which stalled observation for tens of
+// seconds; see README "Observation endpoint". Broadcasts try the read endpoint first, then the others.
+const RPC = config.readRpcUrl;
+const BROADCAST_URLS = [RPC, ...config.rpcUrls.filter((url) => url !== RPC)];
 const provider = makeProvider(RPC, config.chainId);
 const wallet = loadWallet(provider);
 const coordinatorAddress = getAddress(config.coordinator);
@@ -85,36 +89,51 @@ log("preflight", {
 
 // ---- fulfillment watcher (wall-clock observation) ------------------------------------------------------------------
 
-/** Polls coordinator RandomnessFulfilled logs and remembers when this process first saw each request ID fulfilled. */
+/**
+ * Polls coordinator RandomnessFulfilled logs with plain JSON-RPC calls (3 s timeout, no hidden retries) and remembers
+ * when this process first saw each request ID fulfilled. Poll statistics are kept so observation stalls are visible.
+ */
 function startWatcher(fromBlock) {
   const seen = new Map();
-  const errors = [];
+  const stats = {polls: 0, failedPolls: 0, errors: [], maxMsBetweenSuccessfulPolls: 0, pollsSlowerThan2s: 0};
   let scannedTo = fromBlock - 1;
   let stopped = false;
-  const OVERLAP = 6; // rescan a few blocks: load-balanced RPC nodes can briefly disagree about the head
+  let lastSuccessMs = Date.now();
+  const OVERLAP = 20; // rescan about 10 s of blocks: load-balanced RPC nodes can briefly disagree about the head
+  const call = async (method, params) => {
+    const response = await rawRpc(RPC, method, params, 3000);
+    if (response.error) throw new Error(`${method}: ${response.error.message}`);
+    return response.result;
+  };
   const loop = (async () => {
     while (!stopped) {
       const tick = Date.now();
+      stats.polls++;
       try {
-        const head = await provider.getBlockNumber();
-        if (head > scannedTo) {
-          const from = Math.max(fromBlock, scannedTo + 1 - OVERLAP);
-          const to = Math.min(head, from + 999);
-          const logs = await provider.getLogs({address: coordinatorAddress, fromBlock: from, toBlock: to, topics: [topic("RandomnessFulfilled")]});
+        const head = Number(await call("eth_blockNumber", []));
+        const from = Math.max(fromBlock, scannedTo + 1 - OVERLAP);
+        const to = Math.min(head, from + 999);
+        if (to >= from) {
+          const logs = await call("eth_getLogs", [{address: coordinatorAddress, fromBlock: `0x${from.toString(16)}`, toBlock: `0x${to.toString(16)}`, topics: [topic("RandomnessFulfilled")]}]);
           const now = Date.now();
           for (const entry of logs) {
             const id = BigInt(entry.topics[1]).toString();
-            if (!seen.has(id)) seen.set(id, {observedAtMs: now, block: entry.blockNumber, tx: entry.transactionHash});
+            if (!seen.has(id)) seen.set(id, {observedAtMs: now, block: Number(entry.blockNumber), tx: entry.transactionHash});
           }
-          scannedTo = to;
+          scannedTo = Math.max(scannedTo, to);
         }
+        const now = Date.now();
+        stats.maxMsBetweenSuccessfulPolls = Math.max(stats.maxMsBetweenSuccessfulPolls, now - lastSuccessMs);
+        if (now - tick > 2000) stats.pollsSlowerThan2s++;
+        lastSuccessMs = now;
       } catch (error) {
-        if (errors.length < 20) errors.push(String(error.shortMessage ?? error.message).slice(0, 120));
+        stats.failedPolls++;
+        if (stats.errors.length < 20) stats.errors.push(String(error.message).slice(0, 120));
       }
       await sleep(Math.max(0, config.pollIntervalMs - (Date.now() - tick)));
     }
   })();
-  return {seen, errors, stop: async () => { stopped = true; await loop; }};
+  return {seen, stats, stop: async () => { stopped = true; await loop; }};
 }
 
 // ---- request transactions ----------------------------------------------------------------------------------------
@@ -149,7 +168,7 @@ async function signOpen(count, valuePerRequest, gasLimit, fees) {
 async function sendAndTrack(signed, index) {
   const entry = {index, hash: signed.hash, nonce: signed.nonce, count: signed.count, valuePerRequestWei: signed.valuePerRequest.toString()};
   requestTxs.push(entry);
-  const sent = await broadcastRaw(signed.raw, config.rpcUrls);
+  const sent = await broadcastRaw(signed.raw, BROADCAST_URLS);
   Object.assign(entry, {broadcastAtMs: sent.startedAtMs, acceptedAtMs: sent.acceptedAtMs, acceptedBy: sent.acceptedBy, broadcastAttempts: sent.attempts, broadcastErrors: sent.errors});
   // A failed answer can still hide an earlier attempt that reached the mempool, so look for a receipt briefly.
   const {receipt, observedAtMs} = await waitForReceipt(provider, signed.hash, sent.ok ? 90_000 : 8_000);
@@ -195,8 +214,17 @@ if (scenario.mode === "burst") {
     const ids = ourRequestIds(entry.receipt).map((event) => event.args.requestId.toString());
     // Wait for every request in this transaction to be observed fulfilled, or for its 60 s deadline to pass
     // (measured locally from receipt observation, plus a margin, to avoid extra RPC polling).
+    // Every 2 s the coordinator state is read as well, so a stalled log watcher cannot delay the next request.
     const giveUpAtMs = entry.receiptObservedAtMs + 65_000;
-    while (!ids.every((id) => watcher.seen.has(id)) && Date.now() < giveUpAtMs) await sleep(250);
+    let nextStateCheckMs = Date.now() + 2000;
+    while (!ids.every((id) => watcher.seen.has(id)) && Date.now() < giveUpAtMs) {
+      if (Date.now() >= nextStateCheckMs) {
+        nextStateCheckMs = Date.now() + 2000;
+        const states = await Promise.all(ids.map((id) => coordinator.getRequest(id).catch(() => null)));
+        if (states.every((state) => state?.fulfilled || state?.refunded)) break;
+      }
+      await sleep(250);
+    }
     log("sequential", {index: i + 1, of: scenario.requests / scenario.perTx, requestIds: ids, fulfilled: ids.every((id) => watcher.seen.has(id))});
   }
 } else if (scenario.mode === "sustained") {
@@ -581,7 +609,7 @@ const result = {
     chainId: config.chainId,
     rpcForReads: RPC,
     localClockMinusChainSecondsAtStart: localClockMinusChainSeconds,
-    broadcastEndpoints: config.rpcUrls,
+    broadcastEndpoints: BROADCAST_URLS,
     coordinatorProxy: coordinatorAddress,
     coordinatorImplementation: {atStart: implementationAtStart, atEnd: implementationAtEnd, readFrom: "ERC-1967 implementation slot", matchesManifest: implementationAtStart.toLowerCase() === manifest.coordinatorImplementation.toLowerCase() && implementationAtEnd.toLowerCase() === manifest.coordinatorImplementation.toLowerCase()},
     manifest: {url: config.manifestUrl, sha256: manifestSha256, contractSourceCommit: manifest.contractSourceCommit, keeper: manifest.keeper, registry: manifest.registry},
@@ -592,7 +620,7 @@ const result = {
     runTag,
     software: {sdk: `@d20dao/vrf-sdk@${packageVersion("@d20dao/vrf-sdk")}`, ethers: packageVersion("ethers"), solc: packageVersion("solc"), node: process.version, os: `${os.type()} ${os.release()} ${os.arch()}`},
     script: {repository: "https://github.com/d20dao/benchmarks", commit: git.commit, dirty: git.dirty, dirtyFiles: git.dirtyFiles},
-    watcherErrors: watcher.errors,
+    watcher: {rpc: RPC, pollIntervalMs: config.pollIntervalMs, ...watcher.stats},
   },
   requestTransactions: requestTxs.map(({receipt, ...tx}) => tx),
   fulfillmentTransactions: fulfillmentTxs,

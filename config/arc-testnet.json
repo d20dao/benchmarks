@@ -3,6 +3,7 @@
   "chainId": 5042002,
   "manifestUrl": "https://d20dao.org/deployments/arc-testnet.json",
   "coordinator": "0xd20DA0FF9087d053f0291524Eac12abA1ADBd945",
+  "readRpcUrl": "https://rpc.blockdaemon.testnet.arc.io",
   "rpcUrls": [
     "https://rpc.testnet.arc.io",
     "https://rpc.blockdaemon.testnet.arc.io",

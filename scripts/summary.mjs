@@ -24,7 +24,7 @@ if (!argv.length) {
 } else {
   files = loaded;
 }
-const scenarioOrder = ["sequential-20", "burst-50", "burst-200", "sustained-5rps-45s"];
+const scenarioOrder = ["sequential-20", "burst-50", "burst-200", "sustained-5rps-40s"];
 files.sort((a, b) => (scenarioOrder.indexOf(a.result.scenario.name) + 99) % 99 - (scenarioOrder.indexOf(b.result.scenario.name) + 99) % 99 || a.result.startedAt.localeCompare(b.result.startedAt));
 
 const runs = files.map(({file, sha256: digest, result}) => ({

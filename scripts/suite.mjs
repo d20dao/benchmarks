@@ -9,7 +9,7 @@ const args = process.argv.slice(2);
 const gapIndex = args.indexOf("--gap");
 const gapSeconds = gapIndex >= 0 ? Number(args.splice(gapIndex, 2)[1]) : 120;
 if (!(gapSeconds >= 90)) throw new Error("keep at least 90 seconds between scenarios on the shared testnet keeper");
-const scenarios = args.length ? args : ["sequential-20", "burst-50", "burst-200", "sustained-5rps-45s"];
+const scenarios = args.length ? args : ["sequential-20", "burst-50", "burst-200", "sustained-5rps-40s"];
 
 for (const [index, name] of scenarios.entries()) {
   if (index > 0) {

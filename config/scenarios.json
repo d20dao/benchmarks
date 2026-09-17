@@ -17,12 +17,12 @@
     "perTx": 50,
     "description": "200 requests opened by four 50-request transactions broadcast together; about 11M gas each, so they need at least two 30M-gas blocks."
   },
-  "sustained-5rps-45s": {
+  "sustained-5rps-40s": {
     "mode": "sustained",
     "ratePerSecond": 5,
-    "durationSeconds": 45,
+    "durationSeconds": 40,
     "perTx": 5,
-    "description": "Sustained arrivals: one 5-request transaction every second for 45 seconds (225 requests). 45 s instead of 60 s keeps the whole suite near 500 requests."
+    "description": "Sustained arrivals: one 5-request transaction every second for 40 seconds (200 requests). 40 s instead of 60 s keeps the whole suite under 500 paid requests."
   },
   "smoke": {
     "mode": "burst",
