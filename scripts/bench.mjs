@@ -67,6 +67,7 @@ const [implementationAtStart, pricing, keeperFeeBps, deliveredBefore, balanceBef
   ]));
 if (keccak256(code) !== deployment.runtimeCodeKeccak256) throw new Error("LoadConsumer runtime code differs from deployments/arc-testnet.json");
 if (nonceLatest !== noncePending) throw new Error(`wallet has ${noncePending - nonceLatest} pending transactions; wait until they settle`);
+const localClockMinusChainSeconds = round(Date.now() / 1000 - startHead.timestamp, 1);
 const plannedRequests = scenario.mode === "sustained" ? scenario.ratePerSecond * scenario.durationSeconds : scenario.requests;
 const firstQuote = await quoteRequestFee(provider, coordinatorAddress, CALLBACK_GAS, {bufferBps: config.feeBufferBps});
 const estimatedSpend = firstQuote.value * BigInt(plannedRequests) + BigInt(plannedRequests) * 250_000n * startHead.baseFeePerGas * 2n;
@@ -579,6 +580,7 @@ const result = {
     network: config.network,
     chainId: config.chainId,
     rpcForReads: RPC,
+    localClockMinusChainSecondsAtStart: localClockMinusChainSeconds,
     broadcastEndpoints: config.rpcUrls,
     coordinatorProxy: coordinatorAddress,
     coordinatorImplementation: {atStart: implementationAtStart, atEnd: implementationAtEnd, readFrom: "ERC-1967 implementation slot", matchesManifest: implementationAtStart.toLowerCase() === manifest.coordinatorImplementation.toLowerCase() && implementationAtEnd.toLowerCase() === manifest.coordinatorImplementation.toLowerCase()},

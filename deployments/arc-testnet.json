@@ -1,0 +1,30 @@
+{
+  "network": "arc-testnet",
+  "chainId": 5042002,
+  "contract": "LoadConsumer",
+  "address": "0x7cFf09B81D013f1cbBd216607879BF529760b1B3",
+  "coordinator": "0xd20DA0FF9087d053f0291524Eac12abA1ADBd945",
+  "owner": "0xC8DB0C09bFB51a1FC5D1D13032a2a9838d842356",
+  "deploymentTx": "0x87fe0b04d11d71e7d797baf72e8dd1c7d3afac220ebd7b1ae1007a442faaf613",
+  "block": 62499750,
+  "gasUsed": "505191",
+  "effectiveGasPriceWei": "25000000000",
+  "runtimeCodeKeccak256": "0x10442b71508615f2483604032b10285ddd5605655461bd2583502d02e0698212",
+  "artifactDeployedBytecodeKeccak256": "0x209dfe5ba0c49cdfdabc16fa3d0291b6795132fab653e7a46d9b5fba46d75cd2",
+  "compiler": {
+    "name": "solc-js",
+    "version": "0.8.28+commit.7893614a.Emscripten.clang",
+    "settings": {
+      "evmVersion": "cancun",
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      }
+    }
+  },
+  "sdkVersion": "0.3.3",
+  "coordinatorImplementation": "0xd20da0c375cefcda65703699a4090237057e9b68",
+  "manifestSha256": "eb83eab2b37a05eb91031cbfee2a3f3988840c910d966512934ba1e8c37fb35e",
+  "scriptCommit": "306f41e57d8b0ccb21cc2603e1594e10b3c4b103",
+  "deployedAt": "2026-09-17T02:04:12.446Z"
+}

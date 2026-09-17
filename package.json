@@ -10,8 +10,10 @@
   },
   "scripts": {
     "compile": "node scripts/compile.mjs",
+    "check": "node scripts/compile.mjs --check",
     "deploy": "node scripts/deploy.mjs",
     "bench": "node scripts/bench.mjs",
+    "suite": "node scripts/suite.mjs",
     "summary": "node scripts/summary.mjs"
   },
   "dependencies": {
