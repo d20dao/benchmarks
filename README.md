@@ -50,7 +50,7 @@ Requirements: Node 22.13 or newer (the SDK's minimum), npm, and an Arc Testnet w
    npm run compile -- --check   # or npm run compile to rebuild the artifact
    ```
 
-2. **Fund a dedicated testnet wallet.** Use a fresh key that holds nothing else. At the initialized pricing (0.08 USDC minimum fee per request, 100,000 callback gas, base fee near 20 gwei) the suite of 470 requests costs about 40 USDC: 37.6 USDC in request fees plus about 2 USDC of request gas. Put the key in a file outside the repository (`*.key` is git-ignored anyway):
+2. **Fund a dedicated testnet wallet.** Use a fresh key that holds nothing else. At the Arc Testnet pricing of the published runs (0.08 USDC minimum fee per request, 100,000 callback gas, base fee near 20 gwei) the suite of 470 requests costs about 40 USDC: 37.6 USDC in request fees plus about 2 USDC of request gas. Put the key in a file outside the repository (`*.key` is git-ignored anyway):
 
    ```sh
    export BENCH_PRIVATE_KEY_FILE=/secure/path/arc-testnet-bench.key
@@ -150,7 +150,7 @@ Observations:
 - **Takeover.** In `burst-300-primary-stopped` the primary had served 184 requests when it was stopped; the backup served the other 116, and the last request completed 18 s after its request block.
 - **Queueing.** Completion in a burst grows with queue position: the last of 500 simultaneous requests completed 27 s after its request block, within the 60 s deadline. At 5 requests per second completion stayed at 9 s or less, served by the primary alone.
 - **Isolated requests** completed in a median of 2 chain seconds (4 blocks). One request of `sequential-20` (id 4708) arrived two blocks into epoch 1458, whose selected source returned no packet; the next source was published when the protocol's fallback window opened 20 blocks into the epoch, and the request completed in 14 s.
-- **Cost.** Every request paid the 0.08 USDC minimum fee. Request gas through LoadConsumer was 296,966 for a single request and about 195,600 per request in a 50-request transaction (0.0074 and 0.0049 USDC). The keeper's share was 0.04 USDC per request against 0.0064 to 0.0097 USDC of fulfillment gas per served request.
+- **Cost.** Every request paid the 0.08 USDC minimum fee in force on Arc Testnet at run time. Request gas through LoadConsumer was 296,966 for a single request and about 195,600 per request in a 50-request transaction (0.0074 and 0.0049 USDC). The keeper's share was 0.04 USDC per request against 0.0064 to 0.0097 USDC of fulfillment gas per served request. Arc Mainnet pricing was lowered on 2026-09-18; Arc Testnet pricing is unchanged.
 
 `results/2026-09-17-single-keeper/` holds the previous published runs: the same four standard scenarios served by one keeper, before the 2026-09-18 contract and keeper upgrades. `results/superseded/` holds an earlier `sequential-20` run whose wall-clock observations were distorted by RPC rate limiting (see [Observation endpoint](#observation-endpoint)). Two 3-request pipeline checks (`smoke`) are not published.
 
