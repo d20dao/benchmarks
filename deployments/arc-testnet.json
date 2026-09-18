@@ -2,14 +2,14 @@
   "network": "arc-testnet",
   "chainId": 5042002,
   "contract": "LoadConsumer",
-  "address": "0x7cFf09B81D013f1cbBd216607879BF529760b1B3",
+  "address": "0xd23C36e40444e8E90f1213F23F391C5b1135215f",
   "coordinator": "0xd20DA0FF9087d053f0291524Eac12abA1ADBd945",
-  "owner": "0xC8DB0C09bFB51a1FC5D1D13032a2a9838d842356",
-  "deploymentTx": "0x87fe0b04d11d71e7d797baf72e8dd1c7d3afac220ebd7b1ae1007a442faaf613",
-  "block": 62499750,
+  "owner": "0x7ad78fc8097DFEA5c12DBb503D6EB6E60f34B40B",
+  "deploymentTx": "0x597513b2dbef9a2f33361966d525b3b27c3ea728db5b86d523d0e6631e98847c",
+  "block": 62719137,
   "gasUsed": "505191",
   "effectiveGasPriceWei": "25000000000",
-  "runtimeCodeKeccak256": "0x10442b71508615f2483604032b10285ddd5605655461bd2583502d02e0698212",
+  "runtimeCodeKeccak256": "0xf3c7ec292771319332d7468ed0fa61f219f5dd99d65cbcee2a16aa21183095e2",
   "artifactDeployedBytecodeKeccak256": "0x209dfe5ba0c49cdfdabc16fa3d0291b6795132fab653e7a46d9b5fba46d75cd2",
   "compiler": {
     "name": "solc-js",
@@ -22,9 +22,9 @@
       }
     }
   },
-  "sdkVersion": "0.3.3",
-  "coordinatorImplementation": "0xd20da0c375cefcda65703699a4090237057e9b68",
-  "manifestSha256": "eb83eab2b37a05eb91031cbfee2a3f3988840c910d966512934ba1e8c37fb35e",
-  "scriptCommit": "306f41e57d8b0ccb21cc2603e1594e10b3c4b103",
-  "deployedAt": "2026-09-17T02:04:12.446Z"
+  "sdkVersion": "0.4.0",
+  "coordinatorImplementation": "0xd20da0dada4352a1a9722be43a2d85923443458c",
+  "manifestSha256": "3260de49bdaef88be0d661e5e4c85147e5adb1369bd000ed7421979fe86e2fa9",
+  "scriptCommit": "b8b2ee32929555b4f6b2ec9cf2452feefe459360",
+  "deployedAt": "2026-09-18T09:18:54.821Z"
 }

@@ -546,6 +546,11 @@ const summary = {
     otherFulfillmentTransactionsInWindow: otherFulfillmentTxs.length,
     secondsBetweenFulfillmentTransactions: distribution(keeperIntervals),
     submitters: [...new Set(fulfillmentTxs.map((t) => t.from))],
+    // Per wallet: with a backup keeper, two submitters share the work; skipped members are duplicate attempts.
+    bySubmitter: Object.fromEntries([...new Set(fulfillmentTxs.map((t) => t.from))].map((from) => {
+      const txs = fulfillmentTxs.filter((t) => t.from === from);
+      return [from, {transactions: txs.length, served: txs.reduce((a, t) => a + t.ourServed, 0), skippedMembers: txs.reduce((a, t) => a + t.skipped.length, 0)}];
+    })),
   },
   throughput: {
     fulfillments: ourFulfilled,

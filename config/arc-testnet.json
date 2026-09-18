@@ -15,5 +15,5 @@
   "maxFeePerGasGwei": 200,
   "pollIntervalMs": 500,
   "settleTimeoutSeconds": 150,
-  "maxSpendUsdcPerRun": 25
+  "maxSpendUsdcPerRun": 60
 }

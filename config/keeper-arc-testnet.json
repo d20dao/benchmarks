@@ -1,16 +1,16 @@
 {
-  "source": "Operator declaration for the D20DAO Arc Testnet keeper during these runs. Not measured by this repository and not verifiable from chain data; the keeper repository is private.",
+  "source": "Operator declaration for the D20DAO Arc Testnet keepers during these runs. Not measured by this repository and not verifiable from chain data; the keeper repository is private. The fulfillment submitter of every transaction is recorded from chain data in each result (batching.bySubmitter).",
   "keeperAddressFromManifest": "see manifest.keeper in each result",
   "host": {
     "provider": "x86-64 virtual server (KVM)",
-    "cpu": "AMD EPYC-Rome",
+    "cpu": "AMD EPYC-Genoa",
     "vCpu": 4,
-    "memoryGiB": 7.6,
-    "diskGB": 75,
-    "os": "Ubuntu 24.04.4 LTS",
+    "memoryGiB": 7.8,
+    "diskGB": 256,
+    "os": "Debian 13",
     "runtime": "Docker 29.8.1"
   },
-  "keeperBuildCommit": "d15b4a0",
+  "keeperBuildCommit": "099df03",
   "settings": {
     "POLL_MS": 250,
     "TICK_TIMEOUT_SECONDS": 20,
@@ -19,10 +19,31 @@
     "MAX_FEE_PER_GAS_WEI": "100 gwei",
     "FEE_COVERAGE_BPS": 10000,
     "rpcEndpoints": [
-      "https://rpc.testnet.arc.io",
       "https://rpc.blockdaemon.testnet.arc.io",
+      "an Alchemy Arc Testnet endpoint",
+      "https://rpc.testnet.arc.network",
       "https://rpc.drpc.testnet.arc.io"
     ],
-    "transactionLanes": "one nonce lane: one fulfillment transaction at a time"
+    "transactionLanes": "two lanes: a primary keeper and a backup keeper, each with its own wallet and one nonce lane"
+  },
+  "image": "ghcr.io/d20dao/keeper@sha256:2fb91c3816dc5652687febf48c1c42e223fda65fd687fd653143b10a3f905c6a",
+  "backup": {
+    "role": "backup keeper (follower) with its own wallet, authorized on chain as a backup committer",
+    "host": {
+      "provider": "x86-64 virtual server (KVM)",
+      "cpu": "AMD EPYC-Genoa",
+      "vCpu": 2,
+      "memoryGiB": 3.8,
+      "os": "Debian 13",
+      "runtime": "Docker 29.8.1"
+    },
+    "settings": {
+      "POLL_MS": 250,
+      "FULFILL_BATCH_MAX": 16,
+      "FOLLOWER_DELAY_SECONDS": 20,
+      "FOLLOWER_QUEUE_JOIN": 150,
+      "PRIMARY_LIVENESS_SECONDS": 10
+    },
+    "joinRule": "serves from the newest end of the queue when the oldest open request is older than 20 s, the open queue exceeds 150 requests, or the primary has stopped making progress"
   }
 }

@@ -29,5 +29,17 @@
     "requests": 3,
     "perTx": 3,
     "description": "Pipeline check before a real run; results go to results/smoke/ and are not published."
+  },
+  "burst-500": {
+    "mode": "burst",
+    "requests": 500,
+    "perTx": 50,
+    "description": "500 requests opened by ten 50-request transactions broadcast together, served by a primary keeper and a backup keeper that joins when the queue is deep."
+  },
+  "burst-300-primary-stopped": {
+    "mode": "burst",
+    "requests": 300,
+    "perTx": 50,
+    "description": "300 requests opened together; the operator stops the primary keeper about 10 seconds in, so the backup keeper serves the rest. The stop is an operator action outside this script and is recorded in the run notes."
   }
 }
