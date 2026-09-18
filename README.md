@@ -113,7 +113,7 @@ Reads, receipt polling and the fulfillment watcher use `https://rpc.blockdaemon.
 
 ## Keeper under test
 
-Operator-declared, not verifiable from this repository (`config/keeper-arc-testnet.json`): two keepers built from commit `5af598e` of the private keeper repository, image `ghcr.io/d20dao/keeper@sha256:ceeae71a2692f2fa89200457ce1c251d59f377f6f258a1e251195ce972675343`, each with its own wallet and one nonce lane (one fulfillment transaction at a time).
+Operator-declared, not verifiable from this repository (`config/keeper-arc-testnet.json`): two keepers built from keeper commit `5af598e`, whose source is published at [`d20dao/keeper`](https://github.com/d20dao/keeper) (commit `e0b6cae`, the same keeper code), image `ghcr.io/d20dao/keeper@sha256:ceeae71a2692f2fa89200457ce1c251d59f377f6f258a1e251195ce972675343`, each with its own wallet and one nonce lane (one fulfillment transaction at a time).
 
 - **Primary** (`0x61659d9A9A85dA07C36e7d1B35CF0d96CF199Cac`, the manifest keeper): x86-64 virtual server (KVM), AMD EPYC-Genoa, 4 vCPU, 7.8 GiB RAM, Debian 13, Docker 29.8.1.
 - **Backup** (`0xbb2fdE97a5F4855bEf872C71fbb80Be3170127Ee`, authorized on chain as a backup committer): 2 vCPU, 3.8 GiB RAM, otherwise the same. It prepares and serves from the newest end of the queue when the oldest open request is older than 20 s, the open queue exceeds 150 requests, or the primary stops making progress.

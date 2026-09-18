@@ -1,5 +1,5 @@
 {
-  "source": "Operator declaration for the D20DAO Arc Testnet keepers during these runs. Not measured by this repository and not verifiable from chain data; the keeper repository is private. The fulfillment submitter of every transaction is recorded from chain data in each result (batching.bySubmitter).",
+  "source": "Operator declaration for the D20DAO Arc Testnet keepers during these runs. Not measured by this repository and not verifiable from chain data; the keeper source is public at https://github.com/d20dao/keeper. The fulfillment submitter of every transaction is recorded from chain data in each result (batching.bySubmitter).",
   "keeperAddressFromManifest": "see manifest.keeper in each result",
   "host": {
     "provider": "x86-64 virtual server (KVM)",
@@ -49,5 +49,10 @@
       "pushedBlocks": "the same WebSocket endpoint"
     },
     "joinRule": "prepares and serves from the newest end of the queue when the oldest open request is older than 20 s, the open queue exceeds 150 requests, or the primary has stopped making progress"
+  },
+  "keeperSource": {
+    "repository": "https://github.com/d20dao/keeper",
+    "commit": "e0b6cae",
+    "note": "same keeper code as build commit 5af598e"
   }
 }
