@@ -1,24 +1,24 @@
 {
   "schema": "d20dao-benchmark-summary/1",
   "repository": "https://github.com/d20dao/benchmarks",
-  "generatedAt": "2026-09-18T02:45:15.794Z",
+  "generatedAt": "2026-09-18T12:32:09.488Z",
   "scriptCommits": [
-    "4dd5f79693ad5b9faee9912b21c97ed5feeb7165"
+    "5df5f5b695f8528af1d0fffe674446d54e7f5725"
   ],
   "anyDirtyRun": false,
   "keeper": {
-    "source": "Operator declaration for the D20DAO Arc Testnet keeper during these runs. Not measured by this repository and not verifiable from chain data; the keeper repository is private.",
+    "source": "Operator declaration for the D20DAO Arc Testnet keepers during these runs. Not measured by this repository and not verifiable from chain data; the keeper repository is private. The fulfillment submitter of every transaction is recorded from chain data in each result (batching.bySubmitter).",
     "keeperAddressFromManifest": "see manifest.keeper in each result",
     "host": {
       "provider": "x86-64 virtual server (KVM)",
-      "cpu": "AMD EPYC-Rome",
+      "cpu": "AMD EPYC-Genoa",
       "vCpu": 4,
-      "memoryGiB": 7.6,
-      "diskGB": 75,
-      "os": "Ubuntu 24.04.4 LTS",
+      "memoryGiB": 7.8,
+      "diskGB": 256,
+      "os": "Debian 13",
       "runtime": "Docker 29.8.1"
     },
-    "keeperBuildCommit": "d15b4a0",
+    "keeperBuildCommit": "5af598e",
     "settings": {
       "POLL_MS": 250,
       "TICK_TIMEOUT_SECONDS": 20,
@@ -27,18 +27,43 @@
       "MAX_FEE_PER_GAS_WEI": "100 gwei",
       "FEE_COVERAGE_BPS": 10000,
       "rpcEndpoints": [
-        "https://rpc.testnet.arc.io",
         "https://rpc.blockdaemon.testnet.arc.io",
+        "an Alchemy Arc Testnet endpoint",
+        "https://rpc.testnet.arc.network",
         "https://rpc.drpc.testnet.arc.io"
       ],
-      "transactionLanes": "one nonce lane: one fulfillment transaction at a time"
+      "transactionLanes": "two lanes: a primary keeper and a backup keeper, each with its own wallet and one nonce lane",
+      "IDLE_POLL_MS": 1000,
+      "pushedBlocks": "one public Arc Testnet WebSocket endpoint (wss://rpc.testnet.arc.io) for new blocks and service events; every decision is read over HTTP"
+    },
+    "image": "ghcr.io/d20dao/keeper@sha256:ceeae71a2692f2fa89200457ce1c251d59f377f6f258a1e251195ce972675343",
+    "backup": {
+      "role": "backup keeper (follower) with its own wallet, authorized on chain as a backup committer",
+      "host": {
+        "provider": "x86-64 virtual server (KVM)",
+        "cpu": "AMD EPYC-Genoa",
+        "vCpu": 2,
+        "memoryGiB": 3.8,
+        "os": "Debian 13",
+        "runtime": "Docker 29.8.1"
+      },
+      "settings": {
+        "POLL_MS": 250,
+        "FULFILL_BATCH_MAX": 16,
+        "FOLLOWER_DELAY_SECONDS": 20,
+        "FOLLOWER_QUEUE_JOIN": 150,
+        "PRIMARY_LIVENESS_SECONDS": 10,
+        "IDLE_POLL_MS": 1000,
+        "pushedBlocks": "the same WebSocket endpoint"
+      },
+      "joinRule": "prepares and serves from the newest end of the queue when the oldest open request is older than 20 s, the open queue exceeds 150 requests, or the primary has stopped making progress"
     }
   },
   "runs": [
     {
-      "file": "results/sequential-20-20260917T021356Z.json",
-      "sha256": "95d5b3f5ca40be8e9488f5bcb5c61dc5556ad849b0deeb05fd19d0e855982bc3",
-      "runId": "sequential-20-20260917T021356Z",
+      "file": "results/sequential-20-20260918T122306Z.json",
+      "sha256": "db90b5f0796667359c6efd38d8c91663d53de60d14aaba0a8041454997cab72d",
+      "runId": "sequential-20-20260918T122306Z",
       "scenario": {
         "name": "sequential-20",
         "mode": "sequential",
@@ -46,8 +71,8 @@
         "perTx": 1,
         "description": "Baseline: 20 requests, one per transaction; the next request is sent only after the previous one is fulfilled or expired."
       },
-      "startedAt": "2026-09-17T02:13:56.217Z",
-      "finishedAt": "2026-09-17T02:15:05.478Z",
+      "startedAt": "2026-09-18T12:23:06.819Z",
+      "finishedAt": "2026-09-18T12:24:29.469Z",
       "summary": {
         "requests": {
           "planned": 20,
@@ -58,8 +83,8 @@
           "requestsPerTransaction": 1,
           "requestBlocks": 20,
           "maxRequestsInOneBlock": 1,
-          "requestSpanBlocks": 119,
-          "requestSpanSeconds": 59,
+          "requestSpanBlocks": 145,
+          "requestSpanSeconds": 72,
           "skippedTicks": 0
         },
         "outcome": {
@@ -79,9 +104,9 @@
           "min": 1,
           "p50": 2,
           "p95": 3,
-          "p99": 3,
-          "max": 3,
-          "mean": 1.9,
+          "p99": 14,
+          "max": 14,
+          "mean": 2.4,
           "basis": "fulfillment block timestamp minus request block timestamp (1 s resolution)"
         },
         "latencyBlocks": {
@@ -89,29 +114,29 @@
           "min": 2,
           "p50": 4,
           "p95": 6,
-          "p99": 6,
-          "max": 6,
-          "mean": 3.95,
+          "p99": 29,
+          "max": 29,
+          "mean": 5.2,
           "basis": "fulfillment block number minus request block number"
         },
         "wallClockSeconds": {
           "broadcastToReceiptObserved": {
             "count": 20,
-            "min": 0.585,
-            "p50": 0.603,
-            "p95": 1.082,
-            "p99": 1.168,
-            "max": 1.168,
-            "mean": 0.817
+            "min": 0.606,
+            "p50": 1.095,
+            "p95": 1.199,
+            "p99": 1.59,
+            "max": 1.59,
+            "mean": 0.986
           },
           "broadcastToFulfillmentObserved": {
             "count": 20,
-            "min": 1.717,
-            "p50": 2.891,
-            "p95": 3.855,
-            "p99": 3.872,
-            "max": 3.872,
-            "mean": 2.914
+            "min": 1.83,
+            "p50": 2.78,
+            "p95": 3.75,
+            "p99": 15.44,
+            "max": 15.44,
+            "mean": 3.507
           },
           "basis": "this process: broadcast start to first observation through rpc.blockdaemon.testnet.arc.io, polling every 500 ms",
           "missingObservations": 0
@@ -150,39 +175,46 @@
             "count": 19,
             "min": 2,
             "p50": 3,
-            "p95": 4,
-            "p99": 4,
-            "max": 4,
-            "mean": 3.105
+            "p95": 15,
+            "p99": 15,
+            "max": 15,
+            "mean": 3.737
           },
           "submitters": [
             "0x61659d9A9A85dA07C36e7d1B35CF0d96CF199Cac"
-          ]
+          ],
+          "bySubmitter": {
+            "0x61659d9A9A85dA07C36e7d1B35CF0d96CF199Cac": {
+              "transactions": 20,
+              "served": 20,
+              "skippedMembers": 0
+            }
+          }
         },
         "throughput": {
           "fulfillments": 20,
-          "firstFulfillmentTimestamp": 1789611242,
-          "lastFulfillmentTimestamp": 1789611301,
-          "activeWindowSeconds": 59,
-          "fulfillmentsPerSecond": 0.34,
+          "firstFulfillmentTimestamp": 1789734192,
+          "lastFulfillmentTimestamp": 1789734263,
+          "activeWindowSeconds": 71,
+          "fulfillmentsPerSecond": 0.28,
           "basis": "this run's fulfilled requests divided by the seconds between the first and last fulfillment block timestamps",
           "limitedBy": "arrival rate of this scenario, not keeper capacity"
         },
         "duration": {
-          "wallClockSeconds": 65.9,
-          "chainSeconds": 61,
+          "wallClockSeconds": 79.1,
+          "chainSeconds": 74,
           "chainBasis": "first request block timestamp to last fulfillment block timestamp"
         },
         "gas": {
           "callbackGasLimit": 100000,
           "requestGasPerRequest": {
             "count": 20,
-            "min": 296868,
-            "p50": 296868,
-            "p95": 296868,
-            "p99": 296868,
-            "max": 296868,
-            "mean": 296868
+            "min": 296935,
+            "p50": 296969,
+            "p95": 296969,
+            "p99": 296969,
+            "max": 296969,
+            "mean": 296966
           },
           "requestEffectiveGasPriceGwei": {
             "count": 20,
@@ -195,67 +227,68 @@
           },
           "fulfillmentGasUsedPerTransaction": {
             "count": 20,
-            "min": 291158,
-            "p50": 291201,
-            "p95": 313266,
-            "p99": 324300,
-            "max": 324300,
-            "mean": 296981
+            "min": 291120,
+            "p50": 296645,
+            "p95": 339856,
+            "p99": 368018,
+            "max": 368018,
+            "mean": 301311
           },
           "fulfillmentGasPerServedMember": {
             "count": 20,
-            "min": 291158,
-            "p50": 291201,
-            "p95": 313266,
-            "p99": 324300,
-            "max": 324300,
-            "mean": 296981,
-            "pooled": 296981
+            "min": 291120,
+            "p50": 296645,
+            "p95": 339856,
+            "p99": 368018,
+            "max": 368018,
+            "mean": 301311,
+            "pooled": 301311
           },
           "fulfillmentEffectiveGasPriceGwei": {
             "count": 20,
-            "min": 27.497,
-            "p50": 28,
-            "p95": 28.75,
-            "p99": 29,
-            "max": 29,
-            "mean": 28.012
+            "min": 30,
+            "p50": 32.5,
+            "p95": 32.5,
+            "p99": 32.5,
+            "max": 32.5,
+            "mean": 32.263
           }
         },
         "costUsdc": {
           "user": {
             "feePerRequest": 0.08,
-            "requestGasPerRequest": 0.007422,
-            "totalPerRequest": 0.087422,
+            "requestGasPerRequest": 0.007424,
+            "totalPerRequest": 0.087424,
             "note": "requests opened through LoadConsumer; one request per transaction (sequential) is the closest to a single application request"
           },
           "keeper": {
-            "fulfillmentGasPerServedRequest": 0.00832,
+            "fulfillmentGasPerServedRequest": 0.009723,
             "feeSharePerRequest": 0.04,
-            "netPerRequest": 0.03168
+            "netPerRequest": 0.030277
           },
           "run": {
             "feesPaid": 1.6,
-            "requestGas": 0.148434,
-            "walletBalanceBefore": 57.724287625,
-            "walletBalanceAfter": 55.975853625,
-            "walletSpent": 1.748434
+            "requestGas": 0.148483,
+            "walletBalanceBefore": 61.77054036892073,
+            "walletBalanceAfter": 60.02205756892073,
+            "walletSpent": 1.748483
           }
         },
         "epochs": {
           "epochIds": [
-            256
+            1457,
+            1458
           ],
-          "requestsWaitingForEpochPublication": 0,
+          "requestsWaitingForEpochPublication": 2,
           "basis": "targetBlock = max(requestBlock, epoch commit block + 1); a later target means the request waited for its epoch packet to be published"
         },
         "blocks": {
-          "fromBlock": 62500922,
-          "toBlock": 62501047,
+          "fromBlock": 62741155,
+          "toBlock": 62741305,
           "window": "from the chain head when the run started to the last block containing a request or a fulfillment of this run",
-          "blockCount": 126,
-          "spanSeconds": 63,
-          "meanBlockIntervalSeconds": 0.504,
+          "blockCount": 151,
+          "spanSeconds": 75,
+          "meanBlockIntervalSeconds": 0.5,
           "timestampResolutionSeconds": 1,
           "medianBlocksPerTimestampSecond": 2,
           "medianBlockIntervalSecondsEstimate": 0.5,
@@ -265,14 +298,14 @@
             "max": 20
           },
           "gasUsedRatio": {
-            "mean": 0.0332,
-            "median": 0.0314,
-            "max": 0.1058
+            "mean": 0.0426,
+            "median": 0.0378,
+            "max": 0.1467
           },
           "blockGasLimit": "30000000",
           "transactions": {
-            "total": 1161,
-            "meanPerBlock": 9.21
+            "total": 1701,
+            "meanPerBlock": 11.26
           }
         }
       },
@@ -282,15 +315,15 @@
         "rpcForReads": "https://rpc.blockdaemon.testnet.arc.io",
         "coordinatorProxy": "0xd20DA0FF9087d053f0291524Eac12abA1ADBd945",
         "coordinatorImplementation": {
-          "atStart": "0xd20da0c375cefcda65703699a4090237057e9b68",
-          "atEnd": "0xd20da0c375cefcda65703699a4090237057e9b68",
+          "atStart": "0xd20da0dada4352a1a9722be43a2d85923443458c",
+          "atEnd": "0xd20da0dada4352a1a9722be43a2d85923443458c",
           "readFrom": "ERC-1967 implementation slot",
           "matchesManifest": true
         },
         "manifest": {
           "url": "https://d20dao.org/deployments/arc-testnet.json",
-          "sha256": "eb83eab2b37a05eb91031cbfee2a3f3988840c910d966512934ba1e8c37fb35e",
-          "contractSourceCommit": "640b60cb992a7e3add1efe8e7b392341732ea004",
+          "sha256": "3260de49bdaef88be0d661e5e4c85147e5adb1369bd000ed7421979fe86e2fa9",
+          "contractSourceCommit": "da1bded",
           "keeper": "0x61659d9A9A85dA07C36e7d1B35CF0d96CF199Cac",
           "registry": "0xD20Da00B47A7cD2211dC4683E306913b05903756"
         },
@@ -301,14 +334,14 @@
           "keeperFeeBps": 5000
         },
         "consumer": {
-          "address": "0x7cFf09B81D013f1cbBd216607879BF529760b1B3",
-          "deploymentTx": "0x87fe0b04d11d71e7d797baf72e8dd1c7d3afac220ebd7b1ae1007a442faaf613",
-          "runtimeCodeKeccak256": "0x10442b71508615f2483604032b10285ddd5605655461bd2583502d02e0698212",
+          "address": "0xd23C36e40444e8E90f1213F23F391C5b1135215f",
+          "deploymentTx": "0x597513b2dbef9a2f33361966d525b3b27c3ea728db5b86d523d0e6631e98847c",
+          "runtimeCodeKeccak256": "0xf3c7ec292771319332d7468ed0fa61f219f5dd99d65cbcee2a16aa21183095e2",
           "compiler": "0.8.28+commit.7893614a.Emscripten.clang"
         },
-        "sender": "0xC8DB0C09bFB51a1FC5D1D13032a2a9838d842356",
+        "sender": "0x7ad78fc8097DFEA5c12DBb503D6EB6E60f34B40B",
         "software": {
-          "sdk": "@d20dao/vrf-sdk@0.3.3",
+          "sdk": "@d20dao/vrf-sdk@0.4.0",
           "ethers": "6.17.0",
           "solc": "0.8.28",
           "node": "v24.19.0",
@@ -316,19 +349,19 @@
         },
         "script": {
           "repository": "https://github.com/d20dao/benchmarks",
-          "commit": "4dd5f79693ad5b9faee9912b21c97ed5feeb7165",
+          "commit": "5df5f5b695f8528af1d0fffe674446d54e7f5725",
           "dirty": false,
           "dirtyFiles": []
         },
-        "localClockMinusChainSecondsAtStart": -1.2
+        "localClockMinusChainSecondsAtStart": -0.5
       },
-      "firstRequestTx": "0x1eea82db4cc4a8cf53b3faf3bc050b63ae30e607deaf3d96cbf6d6b81b5c50c5",
-      "firstFulfillmentTx": "0xca92a5a9fb843d22df2ef1819d2a39cfb8f6c7bc746046f46f15f155cf5faecd"
+      "firstRequestTx": "0xe115a26cf5581b9d5ca292038060feee3fba01fd63bd18f307a3d2ba12798a29",
+      "firstFulfillmentTx": "0xc7303261bd392b27e04adb7ab9efe04bfbd3157bd1c6795fc90707e3d5ff9758"
     },
     {
-      "file": "results/burst-50-20260917T021705Z.json",
-      "sha256": "97bc4dcf184a6b655fec176e7c713203b21ac68e94e9eb8474f70491b494be27",
-      "runId": "burst-50-20260917T021705Z",
+      "file": "results/burst-50-20260918T122629Z.json",
+      "sha256": "d17cb3eaa1bb5be3874feee5a4f4bc6097255995e04c543a3c0b1c110057c1a5",
+      "runId": "burst-50-20260918T122629Z",
       "scenario": {
         "name": "burst-50",
         "mode": "burst",
@@ -336,8 +369,8 @@
         "perTx": 50,
         "description": "50 requests opened by one transaction, so all share one block."
       },
-      "startedAt": "2026-09-17T02:17:05.872Z",
-      "finishedAt": "2026-09-17T02:17:23.928Z",
+      "startedAt": "2026-09-18T12:26:29.868Z",
+      "finishedAt": "2026-09-18T12:26:45.821Z",
       "summary": {
         "requests": {
           "planned": 50,
@@ -366,97 +399,105 @@
         },
         "latencySeconds": {
           "count": 50,
-          "min": 5,
-          "p50": 10,
-          "p95": 12,
-          "p99": 12,
-          "max": 12,
-          "mean": 8.96,
+          "min": 3,
+          "p50": 8,
+          "p95": 10,
+          "p99": 10,
+          "max": 10,
+          "mean": 7.36,
           "basis": "fulfillment block timestamp minus request block timestamp (1 s resolution)"
         },
         "latencyBlocks": {
           "count": 50,
-          "min": 9,
-          "p50": 18,
-          "p95": 23,
-          "p99": 23,
-          "max": 23,
-          "mean": 16.28,
+          "min": 6,
+          "p50": 17,
+          "p95": 20,
+          "p99": 20,
+          "max": 20,
+          "mean": 15.2,
           "basis": "fulfillment block number minus request block number"
         },
         "wallClockSeconds": {
           "broadcastToReceiptObserved": {
             "count": 50,
-            "min": 1.107,
-            "p50": 1.107,
-            "p95": 1.107,
-            "p99": 1.107,
-            "max": 1.107,
-            "mean": 1.107
+            "min": 0.601,
+            "p50": 0.601,
+            "p95": 0.601,
+            "p99": 0.601,
+            "max": 0.601,
+            "mean": 0.601
           },
           "broadcastToFulfillmentObserved": {
             "count": 50,
-            "min": 5.571,
-            "p50": 10.644,
-            "p95": 12.678,
-            "p99": 12.678,
-            "max": 12.678,
-            "mean": 9.429
+            "min": 4.049,
+            "p50": 10.141,
+            "p95": 10.646,
+            "p99": 10.646,
+            "max": 10.646,
+            "mean": 8.657
           },
           "basis": "this process: broadcast start to first observation through rpc.blockdaemon.testnet.arc.io, polling every 500 ms",
           "missingObservations": 0
         },
         "batching": {
-          "fulfillmentTransactions": 4,
-          "batchTransactions": 4,
+          "fulfillmentTransactions": 5,
+          "batchTransactions": 5,
           "singleTransactions": 0,
           "membersPerTransaction": [
+            4,
+            8,
             8,
             16,
-            16,
-            10
+            14
           ],
-          "meanMembersPerTransaction": 12.5,
+          "meanMembersPerTransaction": 10,
           "maxMembersPerTransaction": 16,
           "otherConsumersServedInTheseTransactions": 0,
           "otherFulfillmentTransactionsInWindow": 0,
           "secondsBetweenFulfillmentTransactions": {
-            "count": 3,
-            "min": 2,
+            "count": 4,
+            "min": 1,
             "p50": 2,
-            "p95": 3,
-            "p99": 3,
-            "max": 3,
-            "mean": 2.333
+            "p95": 2,
+            "p99": 2,
+            "max": 2,
+            "mean": 1.75
           },
           "submitters": [
             "0x61659d9A9A85dA07C36e7d1B35CF0d96CF199Cac"
-          ]
+          ],
+          "bySubmitter": {
+            "0x61659d9A9A85dA07C36e7d1B35CF0d96CF199Cac": {
+              "transactions": 5,
+              "served": 50,
+              "skippedMembers": 0
+            }
+          }
         },
         "throughput": {
           "fulfillments": 50,
-          "firstFulfillmentTimestamp": 1789611434,
-          "lastFulfillmentTimestamp": 1789611441,
+          "firstFulfillmentTimestamp": 1789734395,
+          "lastFulfillmentTimestamp": 1789734402,
           "activeWindowSeconds": 7,
           "fulfillmentsPerSecond": 7.14,
           "basis": "this run's fulfilled requests divided by the seconds between the first and last fulfillment block timestamps",
           "limitedBy": "keeper and chain (all requests were open at once)"
         },
         "duration": {
-          "wallClockSeconds": 15.7,
-          "chainSeconds": 12,
+          "wallClockSeconds": 13.7,
+          "chainSeconds": 10,
           "chainBasis": "first request block timestamp to last fulfillment block timestamp"
         },
         "gas": {
           "callbackGasLimit": 100000,
           "requestGasPerRequest": {
             "count": 1,
-            "min": 195809,
-            "p50": 195809,
-            "p95": 195809,
-            "p99": 195809,
-            "max": 195809,
-            "mean": 195809
+            "min": 195898,
+            "p50": 195898,
+            "p95": 195898,
+            "p99": 195898,
+            "max": 195898,
+            "mean": 195898
           },
           "requestEffectiveGasPriceGwei": {
             "count": 1,
@@ -468,68 +509,68 @@
             "mean": 25
           },
           "fulfillmentGasUsedPerTransaction": {
-            "count": 4,
-            "min": 2120895,
-            "p50": 2658283,
-            "p95": 4166740,
-            "p99": 4166740,
-            "max": 4166740,
-            "mean": 3276760
+            "count": 5,
+            "min": 1086848,
+            "p50": 2093470,
+            "p95": 4178583,
+            "p99": 4178583,
+            "max": 4178583,
+            "mean": 2613909
           },
           "fulfillmentGasPerServedMember": {
-            "count": 4,
-            "min": 260070,
-            "p50": 260421,
-            "p95": 265828,
-            "p99": 265828,
-            "max": 265828,
-            "mean": 262858,
-            "pooled": 262141
+            "count": 5,
+            "min": 258377,
+            "p50": 261671,
+            "p95": 271712,
+            "p99": 271712,
+            "max": 271712,
+            "mean": 262921,
+            "pooled": 261391
           },
           "fulfillmentEffectiveGasPriceGwei": {
-            "count": 4,
-            "min": 27.5,
-            "p50": 30,
-            "p95": 30,
-            "p99": 30,
-            "max": 30,
-            "mean": 29.375
+            "count": 5,
+            "min": 31.5,
+            "p50": 32.5,
+            "p95": 32.5,
+            "p99": 32.5,
+            "max": 32.5,
+            "mean": 32.3
           }
         },
         "costUsdc": {
           "user": {
             "feePerRequest": 0.08,
-            "requestGasPerRequest": 0.004895,
-            "totalPerRequest": 0.084895,
+            "requestGasPerRequest": 0.004897,
+            "totalPerRequest": 0.084897,
             "note": "requests opened through LoadConsumer; one request per transaction (sequential) is the closest to a single application request"
           },
           "keeper": {
-            "fulfillmentGasPerServedRequest": 0.007758,
+            "fulfillmentGasPerServedRequest": 0.008473,
             "feeSharePerRequest": 0.04,
-            "netPerRequest": 0.032242
+            "netPerRequest": 0.031527
           },
           "run": {
             "feesPaid": 4,
-            "requestGas": 0.244761,
-            "walletBalanceBefore": 55.975853625,
-            "walletBalanceAfter": 51.731092725,
-            "walletSpent": 4.244761
+            "requestGas": 0.244872,
+            "walletBalanceBefore": 60.02205756892073,
+            "walletBalanceAfter": 55.77718541892073,
+            "walletSpent": 4.244872
           }
         },
         "epochs": {
           "epochIds": [
-            258
+            1459
           ],
           "requestsWaitingForEpochPublication": 50,
           "basis": "targetBlock = max(requestBlock, epoch commit block + 1); a later target means the request waited for its epoch packet to be published"
         },
         "blocks": {
-          "fromBlock": 62501300,
-          "toBlock": 62501326,
+          "fromBlock": 62741560,
+          "toBlock": 62741583,
           "window": "from the chain head when the run started to the last block containing a request or a fulfillment of this run",
-          "blockCount": 27,
-          "spanSeconds": 13,
-          "meanBlockIntervalSeconds": 0.5,
+          "blockCount": 24,
+          "spanSeconds": 12,
+          "meanBlockIntervalSeconds": 0.522,
           "timestampResolutionSeconds": 1,
           "medianBlocksPerTimestampSecond": 2,
           "medianBlockIntervalSecondsEstimate": 0.5,
@@ -539,14 +580,14 @@
             "max": 20
           },
           "gasUsedRatio": {
-            "mean": 0.0812,
-            "median": 0.051,
-            "max": 0.3426
+            "mean": 0.0724,
+            "median": 0.0509,
+            "max": 0.3456
           },
           "blockGasLimit": "30000000",
           "transactions": {
-            "total": 305,
-            "meanPerBlock": 11.3
+            "total": 279,
+            "meanPerBlock": 11.63
           }
         }
       },
@@ -556,15 +597,15 @@
         "rpcForReads": "https://rpc.blockdaemon.testnet.arc.io",
         "coordinatorProxy": "0xd20DA0FF9087d053f0291524Eac12abA1ADBd945",
         "coordinatorImplementation": {
-          "atStart": "0xd20da0c375cefcda65703699a4090237057e9b68",
-          "atEnd": "0xd20da0c375cefcda65703699a4090237057e9b68",
+          "atStart": "0xd20da0dada4352a1a9722be43a2d85923443458c",
+          "atEnd": "0xd20da0dada4352a1a9722be43a2d85923443458c",
           "readFrom": "ERC-1967 implementation slot",
           "matchesManifest": true
         },
         "manifest": {
           "url": "https://d20dao.org/deployments/arc-testnet.json",
-          "sha256": "eb83eab2b37a05eb91031cbfee2a3f3988840c910d966512934ba1e8c37fb35e",
-          "contractSourceCommit": "640b60cb992a7e3add1efe8e7b392341732ea004",
+          "sha256": "3260de49bdaef88be0d661e5e4c85147e5adb1369bd000ed7421979fe86e2fa9",
+          "contractSourceCommit": "da1bded",
           "keeper": "0x61659d9A9A85dA07C36e7d1B35CF0d96CF199Cac",
           "registry": "0xD20Da00B47A7cD2211dC4683E306913b05903756"
         },
@@ -575,14 +616,14 @@
           "keeperFeeBps": 5000
         },
         "consumer": {
-          "address": "0x7cFf09B81D013f1cbBd216607879BF529760b1B3",
-          "deploymentTx": "0x87fe0b04d11d71e7d797baf72e8dd1c7d3afac220ebd7b1ae1007a442faaf613",
-          "runtimeCodeKeccak256": "0x10442b71508615f2483604032b10285ddd5605655461bd2583502d02e0698212",
+          "address": "0xd23C36e40444e8E90f1213F23F391C5b1135215f",
+          "deploymentTx": "0x597513b2dbef9a2f33361966d525b3b27c3ea728db5b86d523d0e6631e98847c",
+          "runtimeCodeKeccak256": "0xf3c7ec292771319332d7468ed0fa61f219f5dd99d65cbcee2a16aa21183095e2",
           "compiler": "0.8.28+commit.7893614a.Emscripten.clang"
         },
-        "sender": "0xC8DB0C09bFB51a1FC5D1D13032a2a9838d842356",
+        "sender": "0x7ad78fc8097DFEA5c12DBb503D6EB6E60f34B40B",
         "software": {
-          "sdk": "@d20dao/vrf-sdk@0.3.3",
+          "sdk": "@d20dao/vrf-sdk@0.4.0",
           "ethers": "6.17.0",
           "solc": "0.8.28",
           "node": "v24.19.0",
@@ -590,19 +631,19 @@
         },
         "script": {
           "repository": "https://github.com/d20dao/benchmarks",
-          "commit": "4dd5f79693ad5b9faee9912b21c97ed5feeb7165",
+          "commit": "5df5f5b695f8528af1d0fffe674446d54e7f5725",
           "dirty": false,
           "dirtyFiles": []
         },
-        "localClockMinusChainSecondsAtStart": -1.5
+        "localClockMinusChainSecondsAtStart": 0.5
       },
-      "firstRequestTx": "0x46ecddb1649ac900983c63858104690dc51fc18b6d8033ebe19be7f4e0d71cc0",
-      "firstFulfillmentTx": "0xb72e7d2f3517f807b861248dadac973860ef78578834e44f20824781d8f9d4ab"
+      "firstRequestTx": "0x898b9cac224c90e23ebee95b3a014b6ec6f49c389157efc90b06b0576a75e1a8",
+      "firstFulfillmentTx": "0xb1465d6707b2b7e9d4962c2b0f1a6da5a9d9663cc150a9b43475745744d8f65d"
     },
     {
-      "file": "results/burst-200-20260917T021924Z.json",
-      "sha256": "a2178719e22dd0a4714db8e707bbd682d2935cfe7ca7faf1a7f930f228a61c6c",
-      "runId": "burst-200-20260917T021924Z",
+      "file": "results/burst-200-20260918T122846Z.json",
+      "sha256": "0d03ca44bc37a511a7e78cd4e5f4f701e2445ca55632c1d3d8230cd2bfe614ef",
+      "runId": "burst-200-20260918T122846Z",
       "scenario": {
         "name": "burst-200",
         "mode": "burst",
@@ -610,8 +651,8 @@
         "perTx": 50,
         "description": "200 requests opened by four 50-request transactions broadcast together; about 11M gas each, so they need at least two 30M-gas blocks."
       },
-      "startedAt": "2026-09-17T02:19:24.330Z",
-      "finishedAt": "2026-09-17T02:20:07.975Z",
+      "startedAt": "2026-09-18T12:28:46.220Z",
+      "finishedAt": "2026-09-18T12:29:10.466Z",
       "summary": {
         "requests": {
           "planned": 200,
@@ -623,7 +664,7 @@
           "requestBlocks": 2,
           "maxRequestsInOneBlock": 100,
           "requestSpanBlocks": 2,
-          "requestSpanSeconds": 0,
+          "requestSpanSeconds": 1,
           "skippedTicks": 0
         },
         "outcome": {
@@ -635,56 +676,62 @@
           "callbackFailures": 0,
           "refunded": 0,
           "expiredUnfulfilled": 0,
-          "skippedMemberEvents": 0,
+          "skippedMemberEvents": 12,
           "aborted": null
         },
         "latencySeconds": {
           "count": 200,
-          "min": 6,
-          "p50": 21,
-          "p95": 33,
-          "p99": 35,
-          "max": 35,
-          "mean": 20.44,
+          "min": 3,
+          "p50": 10,
+          "p95": 14,
+          "p99": 15,
+          "max": 15,
+          "mean": 10.26,
           "basis": "fulfillment block timestamp minus request block timestamp (1 s resolution)"
         },
         "latencyBlocks": {
           "count": 200,
-          "min": 13,
-          "p50": 41,
-          "p95": 65,
-          "p99": 70,
-          "max": 70,
-          "mean": 40.06,
+          "min": 6,
+          "p50": 20,
+          "p95": 28,
+          "p99": 30,
+          "max": 30,
+          "mean": 19.54,
           "basis": "fulfillment block number minus request block number"
         },
         "wallClockSeconds": {
           "broadcastToReceiptObserved": {
             "count": 200,
-            "min": 0.61,
-            "p50": 0.704,
-            "p95": 1.19,
-            "p99": 1.19,
-            "max": 1.19,
-            "mean": 0.914
+            "min": 0.689,
+            "p50": 1.076,
+            "p95": 1.605,
+            "p99": 1.605,
+            "max": 1.605,
+            "mean": 1.242
           },
           "broadcastToFulfillmentObserved": {
             "count": 200,
-            "min": 7.612,
-            "p50": 22.335,
-            "p95": 34.497,
-            "p99": 36.534,
-            "max": 36.534,
-            "mean": 21.679
+            "min": 4.568,
+            "p50": 11.652,
+            "p95": 15.707,
+            "p99": 16.721,
+            "max": 16.721,
+            "mean": 11.249
           },
           "basis": "this process: broadcast start to first observation through rpc.blockdaemon.testnet.arc.io, polling every 500 ms",
           "missingObservations": 0
         },
         "batching": {
-          "fulfillmentTransactions": 13,
-          "batchTransactions": 13,
+          "fulfillmentTransactions": 19,
+          "batchTransactions": 19,
           "singleTransactions": 0,
           "membersPerTransaction": [
+            4,
+            8,
+            8,
+            8,
+            16,
+            8,
             16,
             16,
             16,
@@ -692,54 +739,67 @@
             16,
             16,
             16,
+            8,
+            8,
+            8,
             16,
-            16,
-            16,
-            16,
-            16,
-            8
+            4,
+            4
           ],
-          "meanMembersPerTransaction": 15.38,
+          "meanMembersPerTransaction": 11.16,
           "maxMembersPerTransaction": 16,
           "otherConsumersServedInTheseTransactions": 0,
           "otherFulfillmentTransactionsInWindow": 0,
           "secondsBetweenFulfillmentTransactions": {
-            "count": 12,
-            "min": 2,
-            "p50": 2,
-            "p95": 3,
-            "p99": 3,
-            "max": 3,
-            "mean": 2.417
+            "count": 18,
+            "min": 0,
+            "p50": 1,
+            "p95": 2,
+            "p99": 2,
+            "max": 2,
+            "mean": 0.667
           },
           "submitters": [
+            "0xbb2fdE97a5F4855bEf872C71fbb80Be3170127Ee",
             "0x61659d9A9A85dA07C36e7d1B35CF0d96CF199Cac"
-          ]
+          ],
+          "bySubmitter": {
+            "0xbb2fdE97a5F4855bEf872C71fbb80Be3170127Ee": {
+              "transactions": 7,
+              "served": 60,
+              "skippedMembers": 4
+            },
+            "0x61659d9A9A85dA07C36e7d1B35CF0d96CF199Cac": {
+              "transactions": 12,
+              "served": 140,
+              "skippedMembers": 8
+            }
+          }
         },
         "throughput": {
           "fulfillments": 200,
-          "firstFulfillmentTimestamp": 1789611574,
-          "lastFulfillmentTimestamp": 1789611603,
-          "activeWindowSeconds": 29,
-          "fulfillmentsPerSecond": 6.9,
+          "firstFulfillmentTimestamp": 1789734532,
+          "lastFulfillmentTimestamp": 1789734544,
+          "activeWindowSeconds": 12,
+          "fulfillmentsPerSecond": 16.67,
           "basis": "this run's fulfilled requests divided by the seconds between the first and last fulfillment block timestamps",
           "limitedBy": "keeper and chain (all requests were open at once)"
         },
         "duration": {
-          "wallClockSeconds": 39.1,
-          "chainSeconds": 35,
+          "wallClockSeconds": 19.3,
+          "chainSeconds": 16,
           "chainBasis": "first request block timestamp to last fulfillment block timestamp"
         },
         "gas": {
           "callbackGasLimit": 100000,
           "requestGasPerRequest": {
             "count": 4,
-            "min": 195404,
-            "p50": 195404,
-            "p95": 195809,
-            "p99": 195809,
-            "max": 195809,
-            "mean": 195505
+            "min": 195493,
+            "p50": 195493,
+            "p95": 195898,
+            "p99": 195898,
+            "max": 195898,
+            "mean": 195594
           },
           "requestEffectiveGasPriceGwei": {
             "count": 4,
@@ -751,67 +811,67 @@
             "mean": 25
           },
           "fulfillmentGasUsedPerTransaction": {
-            "count": 13,
-            "min": 2120940,
-            "p50": 4161173,
-            "p95": 4245702,
-            "p99": 4245702,
-            "max": 4245702,
-            "mean": 4012823
+            "count": 19,
+            "min": 89110,
+            "p50": 2166193,
+            "p95": 4255516,
+            "p99": 4255516,
+            "max": 4255516,
+            "mean": 2779973
           },
           "fulfillmentGasPerServedMember": {
-            "count": 13,
-            "min": 257952,
-            "p50": 260412,
-            "p95": 265356,
-            "p99": 265356,
-            "max": 265356,
-            "mean": 260998,
-            "pooled": 260834
+            "count": 17,
+            "min": 256933,
+            "p50": 263063,
+            "p95": 285130,
+            "p99": 285130,
+            "max": 285130,
+            "mean": 265183,
+            "pooled": 264097
           },
           "fulfillmentEffectiveGasPriceGwei": {
-            "count": 13,
-            "min": 25,
-            "p50": 30,
-            "p95": 30,
-            "p99": 30,
-            "max": 30,
-            "mean": 28.654
+            "count": 19,
+            "min": 30,
+            "p50": 30.3,
+            "p95": 31.25,
+            "p99": 31.25,
+            "max": 31.25,
+            "mean": 30.374
           }
         },
         "costUsdc": {
           "user": {
             "feePerRequest": 0.08,
-            "requestGasPerRequest": 0.004888,
-            "totalPerRequest": 0.084888,
+            "requestGasPerRequest": 0.00489,
+            "totalPerRequest": 0.08489,
             "note": "requests opened through LoadConsumer; one request per transaction (sequential) is the closest to a single application request"
           },
           "keeper": {
-            "fulfillmentGasPerServedRequest": 0.007459,
+            "fulfillmentGasPerServedRequest": 0.007997,
             "feeSharePerRequest": 0.04,
-            "netPerRequest": 0.032541
+            "netPerRequest": 0.032003
           },
           "run": {
             "feesPaid": 16,
-            "requestGas": 0.977526,
-            "walletBalanceBefore": 51.731092725,
-            "walletBalanceAfter": 34.753567125,
-            "walletSpent": 16.977526
+            "requestGas": 0.977971,
+            "walletBalanceBefore": 55.77718541892073,
+            "walletBalanceAfter": 38.79921481892073,
+            "walletSpent": 16.977971
           }
         },
         "epochs": {
           "epochIds": [
-            259
+            1460
           ],
           "requestsWaitingForEpochPublication": 200,
           "basis": "targetBlock = max(requestBlock, epoch commit block + 1); a later target means the request waited for its epoch packet to be published"
         },
         "blocks": {
-          "fromBlock": 62501574,
-          "toBlock": 62501646,
+          "fromBlock": 62741833,
+          "toBlock": 62741867,
           "window": "from the chain head when the run started to the last block containing a request or a fulfillment of this run",
-          "blockCount": 73,
-          "spanSeconds": 36,
+          "blockCount": 35,
+          "spanSeconds": 17,
           "meanBlockIntervalSeconds": 0.5,
           "timestampResolutionSeconds": 1,
           "medianBlocksPerTimestampSecond": 2,
@@ -822,14 +882,14 @@
             "max": 20
           },
           "gasUsedRatio": {
-            "mean": 0.0802,
-            "median": 0.0442,
-            "max": 0.6965
+            "mean": 0.1313,
+            "median": 0.0493,
+            "max": 0.7236
           },
           "blockGasLimit": "30000000",
           "transactions": {
-            "total": 740,
-            "meanPerBlock": 10.14
+            "total": 413,
+            "meanPerBlock": 11.8
           }
         }
       },
@@ -839,15 +899,15 @@
         "rpcForReads": "https://rpc.blockdaemon.testnet.arc.io",
         "coordinatorProxy": "0xd20DA0FF9087d053f0291524Eac12abA1ADBd945",
         "coordinatorImplementation": {
-          "atStart": "0xd20da0c375cefcda65703699a4090237057e9b68",
-          "atEnd": "0xd20da0c375cefcda65703699a4090237057e9b68",
+          "atStart": "0xd20da0dada4352a1a9722be43a2d85923443458c",
+          "atEnd": "0xd20da0dada4352a1a9722be43a2d85923443458c",
           "readFrom": "ERC-1967 implementation slot",
           "matchesManifest": true
         },
         "manifest": {
           "url": "https://d20dao.org/deployments/arc-testnet.json",
-          "sha256": "eb83eab2b37a05eb91031cbfee2a3f3988840c910d966512934ba1e8c37fb35e",
-          "contractSourceCommit": "640b60cb992a7e3add1efe8e7b392341732ea004",
+          "sha256": "3260de49bdaef88be0d661e5e4c85147e5adb1369bd000ed7421979fe86e2fa9",
+          "contractSourceCommit": "da1bded",
           "keeper": "0x61659d9A9A85dA07C36e7d1B35CF0d96CF199Cac",
           "registry": "0xD20Da00B47A7cD2211dC4683E306913b05903756"
         },
@@ -858,14 +918,14 @@
           "keeperFeeBps": 5000
         },
         "consumer": {
-          "address": "0x7cFf09B81D013f1cbBd216607879BF529760b1B3",
-          "deploymentTx": "0x87fe0b04d11d71e7d797baf72e8dd1c7d3afac220ebd7b1ae1007a442faaf613",
-          "runtimeCodeKeccak256": "0x10442b71508615f2483604032b10285ddd5605655461bd2583502d02e0698212",
+          "address": "0xd23C36e40444e8E90f1213F23F391C5b1135215f",
+          "deploymentTx": "0x597513b2dbef9a2f33361966d525b3b27c3ea728db5b86d523d0e6631e98847c",
+          "runtimeCodeKeccak256": "0xf3c7ec292771319332d7468ed0fa61f219f5dd99d65cbcee2a16aa21183095e2",
           "compiler": "0.8.28+commit.7893614a.Emscripten.clang"
         },
-        "sender": "0xC8DB0C09bFB51a1FC5D1D13032a2a9838d842356",
+        "sender": "0x7ad78fc8097DFEA5c12DBb503D6EB6E60f34B40B",
         "software": {
-          "sdk": "@d20dao/vrf-sdk@0.3.3",
+          "sdk": "@d20dao/vrf-sdk@0.4.0",
           "ethers": "6.17.0",
           "solc": "0.8.28",
           "node": "v24.19.0",
@@ -873,19 +933,19 @@
         },
         "script": {
           "repository": "https://github.com/d20dao/benchmarks",
-          "commit": "4dd5f79693ad5b9faee9912b21c97ed5feeb7165",
+          "commit": "5df5f5b695f8528af1d0fffe674446d54e7f5725",
           "dirty": false,
           "dirtyFiles": []
         },
-        "localClockMinusChainSecondsAtStart": -2
+        "localClockMinusChainSecondsAtStart": -0.1
       },
-      "firstRequestTx": "0xea80d0136f6f0dcc9e3ea269fbcdecf4ae8153ba3f3f49900b50b46ad5710339",
-      "firstFulfillmentTx": "0x27524b191faee27c9278b20f8e9315b2c6b59757c9ff766d9a770a2f36876a32"
+      "firstRequestTx": "0xeb150b6d53831e4ced292eb24de503e0a923dc2fa8813d185c0d6f4d15243663",
+      "firstFulfillmentTx": "0x76ff20d2ed6743d886a8832643f4dfe335704dc2858b0e1857e22a78b3247370"
     },
     {
-      "file": "results/sustained-5rps-40s-20260917T022208Z.json",
-      "sha256": "42891a3717cc310fe89a8ccc10479973c536e92754a2cefba583bc20b6d2622c",
-      "runId": "sustained-5rps-40s-20260917T022208Z",
+      "file": "results/sustained-5rps-40s-20260918T123110Z.json",
+      "sha256": "91e1e1b27d72a61bc53d2f020786677b66da2fa289b584b24363e482b0188f24",
+      "runId": "sustained-5rps-40s-20260918T123110Z",
       "scenario": {
         "name": "sustained-5rps-40s",
         "mode": "sustained",
@@ -894,8 +954,8 @@
         "perTx": 5,
         "description": "Sustained arrivals: one 5-request transaction every second for 40 seconds (200 requests). 40 s instead of 60 s keeps the whole suite under 500 paid requests."
       },
-      "startedAt": "2026-09-17T02:22:08.384Z",
-      "finishedAt": "2026-09-17T02:23:01.904Z",
+      "startedAt": "2026-09-18T12:31:10.897Z",
+      "finishedAt": "2026-09-18T12:32:02.829Z",
       "summary": {
         "requests": {
           "planned": 200,
@@ -926,115 +986,120 @@
           "count": 200,
           "min": 2,
           "p50": 5,
-          "p95": 7,
-          "p99": 8,
-          "max": 8,
-          "mean": 4.745,
+          "p95": 8,
+          "p99": 9,
+          "max": 9,
+          "mean": 4.7,
           "basis": "fulfillment block timestamp minus request block timestamp (1 s resolution)"
         },
         "latencyBlocks": {
           "count": 200,
           "min": 3,
-          "p50": 10,
-          "p95": 14,
-          "p99": 14,
-          "max": 14,
-          "mean": 8.925,
+          "p50": 9,
+          "p95": 16,
+          "p99": 19,
+          "max": 19,
+          "mean": 9.07,
           "basis": "fulfillment block number minus request block number"
         },
         "wallClockSeconds": {
           "broadcastToReceiptObserved": {
             "count": 200,
-            "min": 0.598,
-            "p50": 1.068,
-            "p95": 1.547,
-            "p99": 1.557,
-            "max": 1.557,
-            "mean": 0.986
+            "min": 0.58,
+            "p50": 0.626,
+            "p95": 1.499,
+            "p99": 1.548,
+            "max": 1.548,
+            "mean": 0.797
           },
           "broadcastToFulfillmentObserved": {
             "count": 200,
-            "min": 2.509,
-            "p50": 6.006,
-            "p95": 7.843,
-            "p99": 8.415,
-            "max": 8.415,
-            "mean": 5.563
+            "min": 2.293,
+            "p50": 5.249,
+            "p95": 9.371,
+            "p99": 10.469,
+            "max": 10.469,
+            "mean": 5.537
           },
           "basis": "this process: broadcast start to first observation through rpc.blockdaemon.testnet.arc.io, polling every 500 ms",
           "missingObservations": 0
         },
         "batching": {
-          "fulfillmentTransactions": 24,
-          "batchTransactions": 23,
-          "singleTransactions": 1,
+          "fulfillmentTransactions": 22,
+          "batchTransactions": 22,
+          "singleTransactions": 0,
           "membersPerTransaction": [
-            8,
-            7,
             5,
-            5,
-            5,
-            5,
-            1,
+            2,
+            13,
+            11,
             9,
             5,
             5,
             5,
+            10,
+            10,
             5,
-            5,
             10,
             10,
-            10,
+            16,
+            4,
+            8,
+            7,
             15,
-            15,
-            10,
-            15,
-            15,
-            10,
-            15,
-            5
+            16,
+            16,
+            16,
+            2
           ],
-          "meanMembersPerTransaction": 8.33,
-          "maxMembersPerTransaction": 15,
+          "meanMembersPerTransaction": 9.09,
+          "maxMembersPerTransaction": 16,
           "otherConsumersServedInTheseTransactions": 0,
           "otherFulfillmentTransactionsInWindow": 0,
           "secondsBetweenFulfillmentTransactions": {
-            "count": 23,
-            "min": 0,
+            "count": 21,
+            "min": 1,
             "p50": 2,
-            "p95": 3,
+            "p95": 4,
             "p99": 4,
             "max": 4,
-            "mean": 1.783
+            "mean": 1.857
           },
           "submitters": [
             "0x61659d9A9A85dA07C36e7d1B35CF0d96CF199Cac"
-          ]
+          ],
+          "bySubmitter": {
+            "0x61659d9A9A85dA07C36e7d1B35CF0d96CF199Cac": {
+              "transactions": 22,
+              "served": 200,
+              "skippedMembers": 0
+            }
+          }
         },
         "throughput": {
           "fulfillments": 200,
-          "firstFulfillmentTimestamp": 1789611736,
-          "lastFulfillmentTimestamp": 1789611777,
-          "activeWindowSeconds": 41,
-          "fulfillmentsPerSecond": 4.88,
+          "firstFulfillmentTimestamp": 1789734676,
+          "lastFulfillmentTimestamp": 1789734715,
+          "activeWindowSeconds": 39,
+          "fulfillmentsPerSecond": 5.13,
           "basis": "this run's fulfilled requests divided by the seconds between the first and last fulfillment block timestamps",
           "limitedBy": "arrival rate of this scenario, not keeper capacity"
         },
         "duration": {
-          "wallClockSeconds": 48.1,
-          "chainSeconds": 45,
+          "wallClockSeconds": 47.1,
+          "chainSeconds": 42,
           "chainBasis": "first request block timestamp to last fulfillment block timestamp"
         },
         "gas": {
           "callbackGasLimit": 100000,
           "requestGasPerRequest": {
             "count": 40,
-            "min": 210317,
-            "p50": 230591,
-            "p95": 230591,
-            "p99": 230604,
-            "max": 230604,
-            "mean": 229679
+            "min": 214454,
+            "p50": 230680,
+            "p95": 230680,
+            "p99": 230693,
+            "max": 230693,
+            "mean": 230275
           },
           "requestEffectiveGasPriceGwei": {
             "count": 40,
@@ -1046,68 +1111,68 @@
             "mean": 25
           },
           "fulfillmentGasUsedPerTransaction": {
-            "count": 24,
-            "min": 291158,
-            "p50": 1849498,
-            "p95": 3441210,
-            "p99": 3446919,
-            "max": 3446919,
-            "mean": 1959348
+            "count": 22,
+            "min": 526913,
+            "p50": 2069612,
+            "p95": 3693430,
+            "p99": 3693437,
+            "max": 3693437,
+            "mean": 2115152
           },
           "fulfillmentGasPerServedMember": {
-            "count": 24,
-            "min": 227176,
-            "p50": 235012,
-            "p95": 264214,
-            "p99": 291158,
-            "max": 291158,
-            "mean": 239471,
-            "pooled": 235122
+            "count": 22,
+            "min": 226434,
+            "p50": 231010,
+            "p95": 263457,
+            "p99": 294826,
+            "max": 294826,
+            "mean": 237741,
+            "pooled": 232667
           },
           "fulfillmentEffectiveGasPriceGwei": {
-            "count": 24,
-            "min": 25,
-            "p50": 28.25,
-            "p95": 28.25,
-            "p99": 28.25,
-            "max": 28.25,
-            "mean": 27.271
+            "count": 22,
+            "min": 26.652,
+            "p50": 26.652,
+            "p95": 32.5,
+            "p99": 32.5,
+            "max": 32.5,
+            "mean": 27.565
           }
         },
         "costUsdc": {
           "user": {
             "feePerRequest": 0.08,
-            "requestGasPerRequest": 0.005742,
-            "totalPerRequest": 0.085742,
+            "requestGasPerRequest": 0.005757,
+            "totalPerRequest": 0.085757,
             "note": "requests opened through LoadConsumer; one request per transaction (sequential) is the closest to a single application request"
           },
           "keeper": {
-            "fulfillmentGasPerServedRequest": 0.006314,
+            "fulfillmentGasPerServedRequest": 0.006386,
             "feeSharePerRequest": 0.04,
-            "netPerRequest": 0.033686
+            "netPerRequest": 0.033614
           },
           "run": {
             "feesPaid": 16,
-            "requestGas": 1.148396,
-            "walletBalanceBefore": 34.753567125,
-            "walletBalanceAfter": 17.605171,
-            "walletSpent": 17.148396
+            "requestGas": 1.151375,
+            "walletBalanceBefore": 38.79921481892073,
+            "walletBalanceAfter": 21.64783944392073,
+            "walletSpent": 17.151375
           }
         },
         "epochs": {
           "epochIds": [
-            261
+            1462
           ],
-          "requestsWaitingForEpochPublication": 15,
+          "requestsWaitingForEpochPublication": 10,
           "basis": "targetBlock = max(requestBlock, epoch commit block + 1); a later target means the request waited for its epoch packet to be published"
         },
         "blocks": {
-          "fromBlock": 62501898,
-          "toBlock": 62501989,
+          "fromBlock": 62742120,
+          "toBlock": 62742208,
           "window": "from the chain head when the run started to the last block containing a request or a fulfillment of this run",
-          "blockCount": 92,
-          "spanSeconds": 47,
-          "meanBlockIntervalSeconds": 0.516,
+          "blockCount": 89,
+          "spanSeconds": 44,
+          "meanBlockIntervalSeconds": 0.5,
           "timestampResolutionSeconds": 1,
           "medianBlocksPerTimestampSecond": 2,
           "medianBlockIntervalSecondsEstimate": 0.5,
@@ -1117,14 +1182,14 @@
             "max": 20
           },
           "gasUsedRatio": {
-            "mean": 0.0754,
-            "median": 0.0646,
-            "max": 0.2568
+            "mean": 0.0746,
+            "median": 0.0598,
+            "max": 0.2399
           },
           "blockGasLimit": "30000000",
           "transactions": {
-            "total": 919,
-            "meanPerBlock": 9.99
+            "total": 994,
+            "meanPerBlock": 11.17
           }
         }
       },
@@ -1134,15 +1199,15 @@
         "rpcForReads": "https://rpc.blockdaemon.testnet.arc.io",
         "coordinatorProxy": "0xd20DA0FF9087d053f0291524Eac12abA1ADBd945",
         "coordinatorImplementation": {
-          "atStart": "0xd20da0c375cefcda65703699a4090237057e9b68",
-          "atEnd": "0xd20da0c375cefcda65703699a4090237057e9b68",
+          "atStart": "0xd20da0dada4352a1a9722be43a2d85923443458c",
+          "atEnd": "0xd20da0dada4352a1a9722be43a2d85923443458c",
           "readFrom": "ERC-1967 implementation slot",
           "matchesManifest": true
         },
         "manifest": {
           "url": "https://d20dao.org/deployments/arc-testnet.json",
-          "sha256": "eb83eab2b37a05eb91031cbfee2a3f3988840c910d966512934ba1e8c37fb35e",
-          "contractSourceCommit": "640b60cb992a7e3add1efe8e7b392341732ea004",
+          "sha256": "3260de49bdaef88be0d661e5e4c85147e5adb1369bd000ed7421979fe86e2fa9",
+          "contractSourceCommit": "da1bded",
           "keeper": "0x61659d9A9A85dA07C36e7d1B35CF0d96CF199Cac",
           "registry": "0xD20Da00B47A7cD2211dC4683E306913b05903756"
         },
@@ -1153,14 +1218,14 @@
           "keeperFeeBps": 5000
         },
         "consumer": {
-          "address": "0x7cFf09B81D013f1cbBd216607879BF529760b1B3",
-          "deploymentTx": "0x87fe0b04d11d71e7d797baf72e8dd1c7d3afac220ebd7b1ae1007a442faaf613",
-          "runtimeCodeKeccak256": "0x10442b71508615f2483604032b10285ddd5605655461bd2583502d02e0698212",
+          "address": "0xd23C36e40444e8E90f1213F23F391C5b1135215f",
+          "deploymentTx": "0x597513b2dbef9a2f33361966d525b3b27c3ea728db5b86d523d0e6631e98847c",
+          "runtimeCodeKeccak256": "0xf3c7ec292771319332d7468ed0fa61f219f5dd99d65cbcee2a16aa21183095e2",
           "compiler": "0.8.28+commit.7893614a.Emscripten.clang"
         },
-        "sender": "0xC8DB0C09bFB51a1FC5D1D13032a2a9838d842356",
+        "sender": "0x7ad78fc8097DFEA5c12DBb503D6EB6E60f34B40B",
         "software": {
-          "sdk": "@d20dao/vrf-sdk@0.3.3",
+          "sdk": "@d20dao/vrf-sdk@0.4.0",
           "ethers": "6.17.0",
           "solc": "0.8.28",
           "node": "v24.19.0",
@@ -1168,14 +1233,637 @@
         },
         "script": {
           "repository": "https://github.com/d20dao/benchmarks",
-          "commit": "4dd5f79693ad5b9faee9912b21c97ed5feeb7165",
+          "commit": "5df5f5b695f8528af1d0fffe674446d54e7f5725",
           "dirty": false,
           "dirtyFiles": []
         },
-        "localClockMinusChainSecondsAtStart": -1
+        "localClockMinusChainSecondsAtStart": 0.6
       },
-      "firstRequestTx": "0x035c4e52aadacfaff8c48e3f159f7776a7524cfa8b910418174480688ab22a2e",
-      "firstFulfillmentTx": "0xe82190dc8d6c949e3385a34a3ecae02b60713c0870c32d52ef59812451d2194b"
+      "firstRequestTx": "0x32af02c5bac3a474b6d2df4096b9892bc8607946e8de27c20379b98691f0d144",
+      "firstFulfillmentTx": "0x37a3221bfb451f1d94c2047415ffb174d96d31b20b168d5592bf537ad1e472bc"
+    },
+    {
+      "file": "results/burst-500-20260918T121745Z.json",
+      "sha256": "5779ff4dbfc90f26da8dadce7d76262f4aabbabad7c7f7131148b55491286fb5",
+      "runId": "burst-500-20260918T121745Z",
+      "scenario": {
+        "name": "burst-500",
+        "mode": "burst",
+        "requests": 500,
+        "perTx": 50,
+        "description": "500 requests opened by ten 50-request transactions broadcast together, served by a primary keeper and a backup keeper that joins when the queue is deep."
+      },
+      "startedAt": "2026-09-18T12:17:45.413Z",
+      "finishedAt": "2026-09-18T12:18:24.490Z",
+      "summary": {
+        "requests": {
+          "planned": 500,
+          "opened": 500,
+          "requestTransactions": 10,
+          "requestTransactionsReverted": 0,
+          "requestTransactionsNotIncluded": 0,
+          "requestsPerTransaction": 50,
+          "requestBlocks": 5,
+          "maxRequestsInOneBlock": 100,
+          "requestSpanBlocks": 5,
+          "requestSpanSeconds": 2,
+          "skippedTicks": 0
+        },
+        "outcome": {
+          "fulfilled": 500,
+          "fulfilledWithinDeadline": 500,
+          "successRate": 1,
+          "callbacksDelivered": 500,
+          "consumerDeliveredCounterDelta": 500,
+          "callbackFailures": 0,
+          "refunded": 0,
+          "expiredUnfulfilled": 0,
+          "skippedMemberEvents": 0,
+          "aborted": null
+        },
+        "latencySeconds": {
+          "count": 500,
+          "min": 4,
+          "p50": 18,
+          "p95": 25,
+          "p99": 27,
+          "max": 27,
+          "mean": 17.088,
+          "basis": "fulfillment block timestamp minus request block timestamp (1 s resolution)"
+        },
+        "latencyBlocks": {
+          "count": 500,
+          "min": 8,
+          "p50": 35,
+          "p95": 49,
+          "p99": 53,
+          "max": 53,
+          "mean": 33.848,
+          "basis": "fulfillment block number minus request block number"
+        },
+        "wallClockSeconds": {
+          "broadcastToReceiptObserved": {
+            "count": 500,
+            "min": 0.667,
+            "p50": 2.118,
+            "p95": 2.626,
+            "p99": 2.626,
+            "max": 2.626,
+            "mean": 1.87
+          },
+          "broadcastToFulfillmentObserved": {
+            "count": 500,
+            "min": 6.046,
+            "p50": 19.219,
+            "p95": 26.357,
+            "p99": 27.316,
+            "max": 27.316,
+            "mean": 18.765
+          },
+          "basis": "this process: broadcast start to first observation through rpc.blockdaemon.testnet.arc.io, polling every 500 ms",
+          "missingObservations": 0
+        },
+        "batching": {
+          "fulfillmentTransactions": 35,
+          "batchTransactions": 35,
+          "singleTransactions": 0,
+          "membersPerTransaction": [
+            4,
+            4,
+            8,
+            8,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            4,
+            16,
+            8
+          ],
+          "meanMembersPerTransaction": 14.29,
+          "maxMembersPerTransaction": 16,
+          "otherConsumersServedInTheseTransactions": 0,
+          "otherFulfillmentTransactionsInWindow": 0,
+          "secondsBetweenFulfillmentTransactions": {
+            "count": 34,
+            "min": 0,
+            "p50": 0,
+            "p95": 2,
+            "p99": 4,
+            "max": 4,
+            "mean": 0.647
+          },
+          "submitters": [
+            "0xbb2fdE97a5F4855bEf872C71fbb80Be3170127Ee",
+            "0x61659d9A9A85dA07C36e7d1B35CF0d96CF199Cac"
+          ],
+          "bySubmitter": {
+            "0xbb2fdE97a5F4855bEf872C71fbb80Be3170127Ee": {
+              "transactions": 15,
+              "served": 208,
+              "skippedMembers": 0
+            },
+            "0x61659d9A9A85dA07C36e7d1B35CF0d96CF199Cac": {
+              "transactions": 20,
+              "served": 292,
+              "skippedMembers": 0
+            }
+          }
+        },
+        "throughput": {
+          "fulfillments": 500,
+          "firstFulfillmentTimestamp": 1789733872,
+          "lastFulfillmentTimestamp": 1789733894,
+          "activeWindowSeconds": 22,
+          "fulfillmentsPerSecond": 22.73,
+          "basis": "this run's fulfilled requests divided by the seconds between the first and last fulfillment block timestamps",
+          "limitedBy": "keeper and chain (all requests were open at once)"
+        },
+        "duration": {
+          "wallClockSeconds": 30.4,
+          "chainSeconds": 27,
+          "chainBasis": "first request block timestamp to last fulfillment block timestamp"
+        },
+        "gas": {
+          "callbackGasLimit": 100000,
+          "requestGasPerRequest": {
+            "count": 10,
+            "min": 195493,
+            "p50": 195493,
+            "p95": 215780,
+            "p99": 215780,
+            "max": 215780,
+            "mean": 203648
+          },
+          "requestEffectiveGasPriceGwei": {
+            "count": 10,
+            "min": 25.188,
+            "p50": 25.188,
+            "p95": 25.188,
+            "p99": 25.188,
+            "max": 25.188,
+            "mean": 25.188
+          },
+          "fulfillmentGasUsedPerTransaction": {
+            "count": 35,
+            "min": 966547,
+            "p50": 3742136,
+            "p95": 4201198,
+            "p99": 4229234,
+            "max": 4229234,
+            "mean": 3558375
+          },
+          "fulfillmentGasPerServedMember": {
+            "count": 35,
+            "min": 226870,
+            "p50": 258698,
+            "p95": 274465,
+            "p99": 279615,
+            "max": 279615,
+            "mean": 250924,
+            "pooled": 249086
+          },
+          "fulfillmentEffectiveGasPriceGwei": {
+            "count": 35,
+            "min": 25.375,
+            "p50": 32.499,
+            "p95": 32.499,
+            "p99": 32.499,
+            "max": 32.499,
+            "mean": 32.092
+          }
+        },
+        "costUsdc": {
+          "user": {
+            "feePerRequest": 0.08,
+            "requestGasPerRequest": 0.005129,
+            "totalPerRequest": 0.085129,
+            "note": "requests opened through LoadConsumer; one request per transaction (sequential) is the closest to a single application request"
+          },
+          "keeper": {
+            "fulfillmentGasPerServedRequest": 0.008063,
+            "feeSharePerRequest": 0.04,
+            "netPerRequest": 0.031937
+          },
+          "run": {
+            "feesPaid": 40,
+            "requestGas": 2.564695,
+            "walletBalanceBefore": 84.75801403767073,
+            "walletBalanceAfter": 42.19331951892073,
+            "walletSpent": 42.564695
+          }
+        },
+        "epochs": {
+          "epochIds": [
+            1454
+          ],
+          "requestsWaitingForEpochPublication": 400,
+          "basis": "targetBlock = max(requestBlock, epoch commit block + 1); a later target means the request waited for its epoch packet to be published"
+        },
+        "blocks": {
+          "fromBlock": 62740516,
+          "toBlock": 62740571,
+          "window": "from the chain head when the run started to the last block containing a request or a fulfillment of this run",
+          "blockCount": 56,
+          "spanSeconds": 28,
+          "meanBlockIntervalSeconds": 0.509,
+          "timestampResolutionSeconds": 1,
+          "medianBlocksPerTimestampSecond": 2,
+          "medianBlockIntervalSecondsEstimate": 0.5,
+          "baseFeeGwei": {
+            "min": 20,
+            "median": 20,
+            "max": 20.001236533
+          },
+          "gasUsedRatio": {
+            "mean": 0.1686,
+            "median": 0.0928,
+            "max": 0.7586
+          },
+          "blockGasLimit": "30000000",
+          "transactions": {
+            "total": 605,
+            "meanPerBlock": 10.8
+          }
+        }
+      },
+      "environment": {
+        "network": "arc-testnet",
+        "chainId": 5042002,
+        "rpcForReads": "https://rpc.blockdaemon.testnet.arc.io",
+        "coordinatorProxy": "0xd20DA0FF9087d053f0291524Eac12abA1ADBd945",
+        "coordinatorImplementation": {
+          "atStart": "0xd20da0dada4352a1a9722be43a2d85923443458c",
+          "atEnd": "0xd20da0dada4352a1a9722be43a2d85923443458c",
+          "readFrom": "ERC-1967 implementation slot",
+          "matchesManifest": true
+        },
+        "manifest": {
+          "url": "https://d20dao.org/deployments/arc-testnet.json",
+          "sha256": "3260de49bdaef88be0d661e5e4c85147e5adb1369bd000ed7421979fe86e2fa9",
+          "contractSourceCommit": "da1bded",
+          "keeper": "0x61659d9A9A85dA07C36e7d1B35CF0d96CF199Cac",
+          "registry": "0xD20Da00B47A7cD2211dC4683E306913b05903756"
+        },
+        "pricing": {
+          "minFeeWei": "80000000000000000",
+          "feeMultiplier": 5,
+          "fulfillGasOverhead": 300000,
+          "keeperFeeBps": 5000
+        },
+        "consumer": {
+          "address": "0xd23C36e40444e8E90f1213F23F391C5b1135215f",
+          "deploymentTx": "0x597513b2dbef9a2f33361966d525b3b27c3ea728db5b86d523d0e6631e98847c",
+          "runtimeCodeKeccak256": "0xf3c7ec292771319332d7468ed0fa61f219f5dd99d65cbcee2a16aa21183095e2",
+          "compiler": "0.8.28+commit.7893614a.Emscripten.clang"
+        },
+        "sender": "0x7ad78fc8097DFEA5c12DBb503D6EB6E60f34B40B",
+        "software": {
+          "sdk": "@d20dao/vrf-sdk@0.4.0",
+          "ethers": "6.17.0",
+          "solc": "0.8.28",
+          "node": "v24.19.0",
+          "os": "Windows_NT 10.0.19045 x64"
+        },
+        "script": {
+          "repository": "https://github.com/d20dao/benchmarks",
+          "commit": "5df5f5b695f8528af1d0fffe674446d54e7f5725",
+          "dirty": false,
+          "dirtyFiles": []
+        },
+        "localClockMinusChainSecondsAtStart": 0.1
+      },
+      "firstRequestTx": "0x715f321a53a8615bfc283f9447405d561362838c3a60f6c92b23fb83992d6f23",
+      "firstFulfillmentTx": "0x22501bb69e2c90e1a29a7db3f27eda041f1c0ffd9995b8bbd61f415ab14c939b"
+    },
+    {
+      "file": "results/burst-300-primary-stopped-20260918T121924Z.json",
+      "sha256": "24a3db26de8abb9743d4b85f42b2370b2a05dd85642411713caa0ac1432c6c17",
+      "runId": "burst-300-primary-stopped-20260918T121924Z",
+      "scenario": {
+        "name": "burst-300-primary-stopped",
+        "mode": "burst",
+        "requests": 300,
+        "perTx": 50,
+        "description": "300 requests opened together; the operator stops the primary keeper about 10 seconds in, so the backup keeper serves the rest. The stop is an operator action outside this script and is recorded in the run notes."
+      },
+      "startedAt": "2026-09-18T12:19:24.418Z",
+      "finishedAt": "2026-09-18T12:19:52.628Z",
+      "summary": {
+        "requests": {
+          "planned": 300,
+          "opened": 300,
+          "requestTransactions": 6,
+          "requestTransactionsReverted": 0,
+          "requestTransactionsNotIncluded": 0,
+          "requestsPerTransaction": 50,
+          "requestBlocks": 4,
+          "maxRequestsInOneBlock": 100,
+          "requestSpanBlocks": 4,
+          "requestSpanSeconds": 2,
+          "skippedTicks": 0
+        },
+        "outcome": {
+          "fulfilled": 300,
+          "fulfilledWithinDeadline": 300,
+          "successRate": 1,
+          "callbacksDelivered": 300,
+          "consumerDeliveredCounterDelta": 300,
+          "callbackFailures": 0,
+          "refunded": 0,
+          "expiredUnfulfilled": 0,
+          "skippedMemberEvents": 0,
+          "aborted": null
+        },
+        "latencySeconds": {
+          "count": 300,
+          "min": 4,
+          "p50": 8,
+          "p95": 17,
+          "p99": 17,
+          "max": 18,
+          "mean": 8.717,
+          "basis": "fulfillment block timestamp minus request block timestamp (1 s resolution)"
+        },
+        "latencyBlocks": {
+          "count": 300,
+          "min": 7,
+          "p50": 16,
+          "p95": 34,
+          "p99": 34,
+          "max": 36,
+          "mean": 17.477,
+          "basis": "fulfillment block number minus request block number"
+        },
+        "wallClockSeconds": {
+          "broadcastToReceiptObserved": {
+            "count": 300,
+            "min": 0.591,
+            "p50": 1.189,
+            "p95": 2.185,
+            "p99": 2.185,
+            "max": 2.185,
+            "mean": 1.405
+          },
+          "broadcastToFulfillmentObserved": {
+            "count": 300,
+            "min": 4.536,
+            "p50": 9.611,
+            "p95": 17.714,
+            "p99": 17.714,
+            "max": 18.717,
+            "mean": 10.12
+          },
+          "basis": "this process: broadcast start to first observation through rpc.blockdaemon.testnet.arc.io, polling every 500 ms",
+          "missingObservations": 0
+        },
+        "batching": {
+          "fulfillmentTransactions": 22,
+          "batchTransactions": 21,
+          "singleTransactions": 1,
+          "membersPerTransaction": [
+            8,
+            16,
+            1,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            11,
+            6,
+            16,
+            16,
+            2
+          ],
+          "meanMembersPerTransaction": 13.64,
+          "maxMembersPerTransaction": 16,
+          "otherConsumersServedInTheseTransactions": 0,
+          "otherFulfillmentTransactionsInWindow": 0,
+          "secondsBetweenFulfillmentTransactions": {
+            "count": 21,
+            "min": 0,
+            "p50": 1,
+            "p95": 1,
+            "p99": 2,
+            "max": 2,
+            "mean": 0.667
+          },
+          "submitters": [
+            "0x61659d9A9A85dA07C36e7d1B35CF0d96CF199Cac",
+            "0xbb2fdE97a5F4855bEf872C71fbb80Be3170127Ee"
+          ],
+          "bySubmitter": {
+            "0x61659d9A9A85dA07C36e7d1B35CF0d96CF199Cac": {
+              "transactions": 12,
+              "served": 184,
+              "skippedMembers": 0
+            },
+            "0xbb2fdE97a5F4855bEf872C71fbb80Be3170127Ee": {
+              "transactions": 10,
+              "served": 116,
+              "skippedMembers": 0
+            }
+          }
+        },
+        "throughput": {
+          "fulfillments": 300,
+          "firstFulfillmentTimestamp": 1789733970,
+          "lastFulfillmentTimestamp": 1789733984,
+          "activeWindowSeconds": 14,
+          "fulfillmentsPerSecond": 21.43,
+          "basis": "this run's fulfilled requests divided by the seconds between the first and last fulfillment block timestamps",
+          "limitedBy": "keeper and chain (all requests were open at once)"
+        },
+        "duration": {
+          "wallClockSeconds": 22.3,
+          "chainSeconds": 18,
+          "chainBasis": "first request block timestamp to last fulfillment block timestamp"
+        },
+        "gas": {
+          "callbackGasLimit": 100000,
+          "requestGasPerRequest": {
+            "count": 6,
+            "min": 195493,
+            "p50": 195898,
+            "p95": 215780,
+            "p99": 215780,
+            "max": 215780,
+            "mean": 205704
+          },
+          "requestEffectiveGasPriceGwei": {
+            "count": 6,
+            "min": 25,
+            "p50": 25,
+            "p95": 25,
+            "p99": 25,
+            "max": 25,
+            "mean": 25
+          },
+          "fulfillmentGasUsedPerTransaction": {
+            "count": 22,
+            "min": 349174,
+            "p50": 3670824,
+            "p95": 4212495,
+            "p99": 4221846,
+            "max": 4221846,
+            "mean": 3361337
+          },
+          "fulfillmentGasPerServedMember": {
+            "count": 22,
+            "min": 226642,
+            "p50": 258348,
+            "p95": 297664,
+            "p99": 349174,
+            "max": 349174,
+            "mean": 253930,
+            "pooled": 246498
+          },
+          "fulfillmentEffectiveGasPriceGwei": {
+            "count": 22,
+            "min": 25,
+            "p50": 28,
+            "p95": 28,
+            "p99": 28,
+            "max": 28,
+            "mean": 27.864
+          }
+        },
+        "costUsdc": {
+          "user": {
+            "feePerRequest": 0.08,
+            "requestGasPerRequest": 0.005143,
+            "totalPerRequest": 0.085143,
+            "note": "requests opened through LoadConsumer; one request per transaction (sequential) is the closest to a single application request"
+          },
+          "keeper": {
+            "fulfillmentGasPerServedRequest": 0.006881,
+            "feeSharePerRequest": 0.04,
+            "netPerRequest": 0.033119
+          },
+          "run": {
+            "feesPaid": 24,
+            "requestGas": 1.542779,
+            "walletBalanceBefore": 42.19331951892073,
+            "walletBalanceAfter": 16.65054036892073,
+            "walletSpent": 25.542779
+          }
+        },
+        "epochs": {
+          "epochIds": [
+            1455
+          ],
+          "requestsWaitingForEpochPublication": 250,
+          "basis": "targetBlock = max(requestBlock, epoch commit block + 1); a later target means the request waited for its epoch packet to be published"
+        },
+        "blocks": {
+          "fromBlock": 62740712,
+          "toBlock": 62740750,
+          "window": "from the chain head when the run started to the last block containing a request or a fulfillment of this run",
+          "blockCount": 39,
+          "spanSeconds": 19,
+          "meanBlockIntervalSeconds": 0.5,
+          "timestampResolutionSeconds": 1,
+          "medianBlocksPerTimestampSecond": 2,
+          "medianBlockIntervalSecondsEstimate": 0.5,
+          "baseFeeGwei": {
+            "min": 20,
+            "median": 20,
+            "max": 20
+          },
+          "gasUsedRatio": {
+            "mean": 0.1509,
+            "median": 0.1182,
+            "max": 0.7485
+          },
+          "blockGasLimit": "30000000",
+          "transactions": {
+            "total": 433,
+            "meanPerBlock": 11.1
+          }
+        }
+      },
+      "environment": {
+        "network": "arc-testnet",
+        "chainId": 5042002,
+        "rpcForReads": "https://rpc.blockdaemon.testnet.arc.io",
+        "coordinatorProxy": "0xd20DA0FF9087d053f0291524Eac12abA1ADBd945",
+        "coordinatorImplementation": {
+          "atStart": "0xd20da0dada4352a1a9722be43a2d85923443458c",
+          "atEnd": "0xd20da0dada4352a1a9722be43a2d85923443458c",
+          "readFrom": "ERC-1967 implementation slot",
+          "matchesManifest": true
+        },
+        "manifest": {
+          "url": "https://d20dao.org/deployments/arc-testnet.json",
+          "sha256": "3260de49bdaef88be0d661e5e4c85147e5adb1369bd000ed7421979fe86e2fa9",
+          "contractSourceCommit": "da1bded",
+          "keeper": "0x61659d9A9A85dA07C36e7d1B35CF0d96CF199Cac",
+          "registry": "0xD20Da00B47A7cD2211dC4683E306913b05903756"
+        },
+        "pricing": {
+          "minFeeWei": "80000000000000000",
+          "feeMultiplier": 5,
+          "fulfillGasOverhead": 300000,
+          "keeperFeeBps": 5000
+        },
+        "consumer": {
+          "address": "0xd23C36e40444e8E90f1213F23F391C5b1135215f",
+          "deploymentTx": "0x597513b2dbef9a2f33361966d525b3b27c3ea728db5b86d523d0e6631e98847c",
+          "runtimeCodeKeccak256": "0xf3c7ec292771319332d7468ed0fa61f219f5dd99d65cbcee2a16aa21183095e2",
+          "compiler": "0.8.28+commit.7893614a.Emscripten.clang"
+        },
+        "sender": "0x7ad78fc8097DFEA5c12DBb503D6EB6E60f34B40B",
+        "software": {
+          "sdk": "@d20dao/vrf-sdk@0.4.0",
+          "ethers": "6.17.0",
+          "solc": "0.8.28",
+          "node": "v24.19.0",
+          "os": "Windows_NT 10.0.19045 x64"
+        },
+        "script": {
+          "repository": "https://github.com/d20dao/benchmarks",
+          "commit": "5df5f5b695f8528af1d0fffe674446d54e7f5725",
+          "dirty": false,
+          "dirtyFiles": []
+        },
+        "localClockMinusChainSecondsAtStart": 0.1
+      },
+      "firstRequestTx": "0x097b023f4a49f4bccd69177b8077f534a53d8691f5a03de80165591f84ccf763",
+      "firstFulfillmentTx": "0x250fee3fb5aedfce71fa00ef548dd7fd6536e515f9035461ea1d549810507725"
     }
   ]
 }
