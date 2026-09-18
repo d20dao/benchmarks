@@ -10,7 +10,7 @@
     "os": "Debian 13",
     "runtime": "Docker 29.8.1"
   },
-  "keeperBuildCommit": "099df03",
+  "keeperBuildCommit": "5af598e",
   "settings": {
     "POLL_MS": 250,
     "TICK_TIMEOUT_SECONDS": 20,
@@ -24,9 +24,11 @@
       "https://rpc.testnet.arc.network",
       "https://rpc.drpc.testnet.arc.io"
     ],
-    "transactionLanes": "two lanes: a primary keeper and a backup keeper, each with its own wallet and one nonce lane"
+    "transactionLanes": "two lanes: a primary keeper and a backup keeper, each with its own wallet and one nonce lane",
+    "IDLE_POLL_MS": 1000,
+    "pushedBlocks": "one public Arc Testnet WebSocket endpoint (wss://rpc.testnet.arc.io) for new blocks and service events; every decision is read over HTTP"
   },
-  "image": "ghcr.io/d20dao/keeper@sha256:2fb91c3816dc5652687febf48c1c42e223fda65fd687fd653143b10a3f905c6a",
+  "image": "ghcr.io/d20dao/keeper@sha256:ceeae71a2692f2fa89200457ce1c251d59f377f6f258a1e251195ce972675343",
   "backup": {
     "role": "backup keeper (follower) with its own wallet, authorized on chain as a backup committer",
     "host": {
@@ -42,8 +44,10 @@
       "FULFILL_BATCH_MAX": 16,
       "FOLLOWER_DELAY_SECONDS": 20,
       "FOLLOWER_QUEUE_JOIN": 150,
-      "PRIMARY_LIVENESS_SECONDS": 10
+      "PRIMARY_LIVENESS_SECONDS": 10,
+      "IDLE_POLL_MS": 1000,
+      "pushedBlocks": "the same WebSocket endpoint"
     },
-    "joinRule": "serves from the newest end of the queue when the oldest open request is older than 20 s, the open queue exceeds 150 requests, or the primary has stopped making progress"
+    "joinRule": "prepares and serves from the newest end of the queue when the oldest open request is older than 20 s, the open queue exceeds 150 requests, or the primary has stopped making progress"
   }
 }
