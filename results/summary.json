@@ -1,7 +1,7 @@
 {
   "schema": "d20dao-benchmark-summary/1",
   "repository": "https://github.com/d20dao/benchmarks",
-  "generatedAt": "2026-09-17T02:23:09.366Z",
+  "generatedAt": "2026-09-18T02:45:15.794Z",
   "scriptCommits": [
     "4dd5f79693ad5b9faee9912b21c97ed5feeb7165"
   ],
@@ -37,7 +37,7 @@
   "runs": [
     {
       "file": "results/sequential-20-20260917T021356Z.json",
-      "sha256": "2bce52c8b36f1c442abf9488ec437a8a03ccf3d61e99b30c1b0b52102de51006",
+      "sha256": "95d5b3f5ca40be8e9488f5bcb5c61dc5556ad849b0deeb05fd19d0e855982bc3",
       "runId": "sequential-20-20260917T021356Z",
       "scenario": {
         "name": "sequential-20",
@@ -327,7 +327,7 @@
     },
     {
       "file": "results/burst-50-20260917T021705Z.json",
-      "sha256": "503ae654b93f62320f7efe4f0c888ee272707b5b54c5acc71c5e41fb6eb3a16c",
+      "sha256": "97bc4dcf184a6b655fec176e7c713203b21ac68e94e9eb8474f70491b494be27",
       "runId": "burst-50-20260917T021705Z",
       "scenario": {
         "name": "burst-50",
@@ -601,7 +601,7 @@
     },
     {
       "file": "results/burst-200-20260917T021924Z.json",
-      "sha256": "46e204767108a4b2880224fd9cd33a3ddc4a157d8eb075f80852055187057332",
+      "sha256": "a2178719e22dd0a4714db8e707bbd682d2935cfe7ca7faf1a7f930f228a61c6c",
       "runId": "burst-200-20260917T021924Z",
       "scenario": {
         "name": "burst-200",
@@ -884,7 +884,7 @@
     },
     {
       "file": "results/sustained-5rps-40s-20260917T022208Z.json",
-      "sha256": "7ddb2d23849031e9ffa3e16e174c6b0edfafaf237c856cc982d6a2e7406b6a30",
+      "sha256": "42891a3717cc310fe89a8ccc10479973c536e92754a2cefba583bc20b6d2622c",
       "runId": "sustained-5rps-40s-20260917T022208Z",
       "scenario": {
         "name": "sustained-5rps-40s",
