@@ -23,8 +23,8 @@
     }
   },
   "sdkVersion": "0.4.0",
-  "coordinatorImplementation": "0xd20da0dada4352a1a9722be43a2d85923443458c",
-  "manifestSha256": "3260de49bdaef88be0d661e5e4c85147e5adb1369bd000ed7421979fe86e2fa9",
+  "coordinatorImplementation": "0xd20da000125643b4db5a6a36a3b853c17745df44",
+  "manifestSha256": "312c8a8beda375af2b2c0d58e97a980caea4b54e15cc7bf562595b56f305a1b3",
   "scriptCommit": "b8b2ee32929555b4f6b2ec9cf2452feefe459360",
   "deployedAt": "2026-09-18T09:18:54.821Z"
 }
